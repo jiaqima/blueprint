@@ -301,12 +301,10 @@ cat outline.md | npm run blueprint -- import-md paper --stdin
 npm run blueprint -- registry paper                  # effective registry
 npm run blueprint -- registry --workspace            # workspace-level registry (or "(none)")
 npm run blueprint -- registry --init [--force]       # write the built-in default to <workspace>/blueprint.types.toml
-npm run blueprint -- registry --migrate [--force] [--delete-legacy]
-                                                   # convert legacy blueprint.types.toml to TOML
 ```
 
 Resolution: per-doc `GraphFile.registry` (full override) → workspace
-`blueprint.types.toml` (legacy `.json` still readable) → built-in
+`blueprint.types.toml` → built-in
 default. To customize, edit the TOML directly. Built-in default ships
 7 node types (`claim`, `evidence`, `definition`, `question`,
 `assumption`, `risk`, `synthesis`) and 5 edge types (`expands`,

@@ -35,6 +35,8 @@ For agent-facing usage of the CLI, see `.claude/skills/blueprint/SKILL.md`
 - `npm run dev` — Vite dev server with the pair-editing API.
 - `npm run build` — `tsc -b && vite build`. Use this to type-check.
 - `npm run lint` — ESLint.
+- `npm test` — vitest unit suite over the pure core (operations, lint,
+  layout, registry, markdown, idgen, graphFile).
 - `npm run preview` — serve the production build.
 
 There is no separate `typecheck` script; `npm run build` is the type check.
@@ -74,6 +76,8 @@ against the configured dir.
 
 LocalStorage keys (recovery cache only — not source of truth):
 - `blueprint.file.v2` — last in-memory `GraphFile` snapshot (auto-saved, debounced).
+- `blueprint.fileDirty.v1` — whether that snapshot held unsaved changes
+  (gates the restore-recovered prompt on next launch).
 - `blueprint.activeDocument.v1` — which `blueprints/*.json` to reopen on next launch.
 
 ## Architecture
@@ -191,9 +195,12 @@ render but dagre handles them noisily).
 - `graphFile.ts`: `seedGraphFile`, `defaultUi`, `normalizeGraphFile`
   (defensive parse from JSON of unknown shape), `stripGraphForPersist` /
   `stripFileForPersist` (drop transient fields like `selected`, `dragging`,
-  `data.onLabelChange`, `startEditingToken`), `graphFileJson` (canonical
+  `data.onLabelChange`, `startEditingToken`, and react-flow render
+  measurements `width` / `height` / `positionAbsolute` — leaving those in
+  makes CLI-written docs read as dirty on open), `graphFileJson` (canonical
   string for dirty-state and dedup comparisons).
-- `storage.ts`: `saveRecovery`/`loadRecovery` for the file snapshot,
+- `storage.ts`: `saveRecovery`/`loadRecovery` for the file snapshot (plus
+  its dirty flag via `loadRecoveryDirty`),
   `saveActiveDocumentPath`/`loadActiveDocumentPath` for the last-open
   document, `save`/`load` for the legacy graph-only cache, plus a small
   `debounce` helper.
@@ -208,10 +215,15 @@ the dirty flag, and the connection state. Flow:
 1. **Initial state**: `loadRecovery()` from localStorage (or `seedGraphFile`).
 2. **Workspace probe**: `listDocuments()` from the API. If
    `loadActiveDocumentPath()` matches an entry, `loadDocument(path)` and
-   replace the editor. Otherwise start with the seeded empty file.
+   replace the editor — unless the recovery snapshot holds content-level
+   unsaved changes for that document, in which case a confirm offers to
+   restore them (kept in the editor, marked dirty) instead of replacing.
+   Otherwise start with the seeded empty file.
 3. **SSE subscription**: scoped to the active document path. On a
-   `graph-changed` event for that path, re-fetch and replace the editor.
-   Skip applying the remote viewport if the user has panned in the last 5s.
+   `graph-changed` event for that path: if the editor is clean, re-fetch
+   and replace it (skipping the remote viewport if the user has panned in
+   the last 5s); if the editor has unsaved changes, show the conflict bar
+   ("Load latest" / "Keep my edits") instead of silently replacing them.
 4. **Recovery save**: every state change debounces a write of the current
    `GraphFile` to localStorage. **No automatic write to the workspace file.**
 5. **Manual Save / Save As**: writes through the workspace API to
@@ -272,8 +284,11 @@ dev server *is* running, the file watcher live-syncs the browser within
 ~200 ms after the CLI writes.
 
 `src/cli/operations.ts` holds pure, file-free operations over a `GraphFile`
-(`addChild`, `addSibling`, `rename`, `deleteNode`, `move`, `link`, `unlink`,
-`setNotes`, `importMarkdown`, `find`, `outline`). They reuse the existing
+— structure (`addChild`, `addSibling`, `deleteNode`, `move`, `link`,
+`unlink`, `synthesize`), content (`setNodeLabel`/`rename`, `setNodeBody`,
+`setEdgeBody`, `setNotes`), vocabulary (`setNodeType`, `setNodeStatus`,
+`setEdgeType`, `effectiveRegistry`), plus `importMarkdown`, `find`, and
+`outline`; the pure lint pass lives in `src/lint.ts`. They reuse the existing
 `normalizeGraphFile` / `seedGraphFile` / `stripFileForPersist` from
 `graphFile.ts` and `parseMarkdownOutline` from `markdown.ts`. Node refs in
 the CLI accept either an exact node id (`n_xyz_3`) or a label substring;
@@ -291,7 +306,8 @@ agent should call the CLI; `AGENTS.md` points to the same.
    CLI) must explicitly Save.
 3. An agent edits `blueprints/<name>.json` via `npm run blueprint -- <cmd>`
    (or in a pinch with normal file tools). The browser sees the SSE event
-   and reloads the active document into the editor.
+   and reloads the active document into the editor — or, when the editor
+   holds unsaved changes, shows the conflict bar instead of clobbering them.
 
 ## Deferred follow-ups
 
@@ -307,24 +323,18 @@ round; pick one up when the user asks.
    Helps see the spine when the graph gets busy.
 3. **Per-type rollups in the toolbar** — `12 claims, 4 supported, 2 needs-work`
    computed from `effectiveRegistry × graphFile.nodes`. Counts only.
-4. **Type and edge linting** — soft warnings (not blocking) for
-   structural issues, surfaced in the Inspector and via
-   `blueprint show <doc> --lint`. Examples:
-   - a `supports` edge whose source isn't an `evidence` node
-     (edge-type lint)
-   - a `claim` with no incoming `evidence` after several revisions
-     (node-type lint)
-   - a `definition` reused without a typed `defines` / `uses` edge
-   - a `question` left `open` while marked `supported`
-   - an `evidence` node `cited` but never `verified`
-
-   Implementation: each `NodeTypeDef` / `EdgeTypeDef` carries optional
-   lint rules (e.g. `allowedSourceTypes`, `allowedTargetTypes`,
-   `requiresStatus`, `requiresIncomingEdgeType`). Lints are pure
-   functions over the effective registry × `GraphFile`, so they run in
-   both the browser (Inspector + per-node badge) and the CLI. This
-   becomes the foundation of a richer "blueprint linter" — a key
-   roadmap item for the Engineering of Science direction.
+4. **Browser-side lint surfacing** — the lint engine itself has shipped:
+   `src/lint.ts` implements 10 soft rules (supports direction and
+   grounding, matured-without-support, cycles in the supports subgraph,
+   synthesis misuse, lifecycle consistency, vocabulary integrity) as a
+   pure function over `GraphFile` × effective registry, exposed via
+   `blueprint lint <doc>` and covered by `src/lint.test.ts`. Still
+   deferred: surfacing the same issues in the browser (Inspector panel +
+   per-node badges), and per-type configurable rules in the registry
+   (e.g. `allowedSourceTypes`, `allowedTargetTypes`, `requiresStatus`,
+   `requiresIncomingEdgeType`). This is the foundation of a richer
+   "blueprint linter" — a key roadmap item for the Engineering of
+   Science direction.
 5. **Export to a structured Markdown summary** — `blueprint export <doc>
    [--md]` produces a Markdown outline with status badges
    (`- [x] Section 1 — settled`). Useful for sharing snapshots.
@@ -343,8 +353,10 @@ round; pick one up when the user asks.
 - Workspace files are source. LocalStorage is the only recovery cache.
   Manual Save is the only thing that writes a workspace document.
 - No new dependencies without checking they're maintained and small.
-- Don't add tests scaffolding unless asked. The code is small enough to
-  verify by running `npm run dev` and clicking around.
+- The pure core is covered by vitest (`npm test`) — extend those tests
+  when changing pure logic (operations, lint, layout, registry, markdown,
+  graphFile normalize). Don't add UI/e2e test scaffolding unless asked;
+  UI behavior is verified by running `npm run dev` and clicking around.
 - Path validation (absolute paths, `..`, basename whitelist, `blueprints/`
   scope) is a load-bearing invariant of the dev API. Keep it strict.
 - Keyboard shortcut handler in `MindMap.tsx` ignores events whose target is
@@ -366,8 +378,10 @@ For UI changes: `npm run dev`, open the app, exercise the changed path
 (add/delete/rename, import Markdown, refresh for recovery, switch documents,
 Save / Save As, open via the file menu, watch the live sync indicator).
 For workspace/sync changes: edit a `blueprints/*.json` from a separate editor
-while the browser is open; confirm the canvas updates within ~200ms and that
-your in-progress browser edit isn't silently overwritten on the file. For
+while the browser is open; confirm the canvas updates within ~200ms when the
+editor is clean, and that unsaved browser edits raise the conflict bar
+instead of being silently replaced. For
 production-only changes: `npm run preview` and confirm Import/Export JSON
-and the offline state still work. `npm run build` catches the type-level
-mistakes; the browser catches everything else.
+and the offline state still work. `npm test` guards the pure core;
+`npm run build` catches the type-level mistakes; the browser catches
+everything else.

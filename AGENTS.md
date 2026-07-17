@@ -24,6 +24,7 @@ Generated or local-only files are excluded from source control: `dist/`, `node_m
 - `npm run dev` starts the Vite dev server with the local pair-editing API.
 - `npm run build` runs `tsc -b` and writes the production build to `dist/`.
 - `npm run lint` runs ESLint across the repository.
+- `npm test` runs the vitest unit suite (`src/**/*.test.ts`).
 - `npm run preview` serves the production build locally.
 
 There is no separate `typecheck` script; use `npm run build` for type checking.
@@ -36,11 +37,12 @@ Formatting is enforced through ESLint and TypeScript rather than a separate form
 
 ## Testing Guidelines
 
-This repository currently has no automated test framework or coverage target. Before submitting changes, run:
+Unit tests run with vitest (`npm test`); the pure core — CLI operations, lint, layout, registry resolution, markdown import, id generation, graph-file normalization — is covered. There is no coverage target. Before submitting changes, run:
 
 ```bash
 npm run lint
 npm run build
+npm test
 ```
 
 For UI or graph behavior changes, also run `npm run dev` and manually exercise the affected path: add, delete, rename, connect nodes, edit Inspector type/status/body fields, import Markdown, refresh for persistence, or check live sync state.
@@ -69,6 +71,7 @@ npm run blueprint -- outline <doc>                         # plain indented outl
 npm run blueprint -- config                                # resolved workspace dir + source
 
 # Structure
+npm run blueprint -- new <doc>                             # create an empty document (1 root node)
 npm run blueprint -- add <doc> --parent <ref> --label <text> [--body <md> | --body-file <p> | --body-stdin]
 npm run blueprint -- add-sibling <doc> --of <ref> --label <text>
 npm run blueprint -- label <doc> <ref> [--set <text> | --append <text>]

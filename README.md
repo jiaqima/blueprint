@@ -84,7 +84,7 @@ The canvas is the human interface — the agent works on the same file via the C
 - **Import / Export JSON**: round-trip the graph as a JSON file.
 - **Reset**: clear the current blueprint and start from a single root node.
 
-The current document auto-saves a recovery snapshot to `localStorage`. **Manual Save / Save As** writes to `blueprints/<name>.json` — these workspace documents are **per-machine and gitignored**, so your blueprints stay yours and don't drift into the repo's history alongside the code.
+The current document auto-saves a recovery snapshot to `localStorage`. **Manual Save / Save As** writes to `blueprints/<name>.json` — these workspace documents are **per-machine and gitignored**, so your blueprints stay yours and don't drift into the repo's history alongside the code. If the app reopens holding recovered unsaved changes that differ from the saved file, it asks whether to restore them or load the file.
 
 The right-side **Notes** panel is a per-document free-form scratchpad shared with whatever agent is editing the file.
 
@@ -105,7 +105,7 @@ npm run blueprint -- import-md paper --file outline.md
 npm run blueprint -- --help          # full command list
 ```
 
-The CLI rewrites `blueprints/<name>.json` directly. If `npm run dev` is running, the dev-server file watcher picks up the change and live-syncs your browser within ~200 ms.
+The CLI rewrites `blueprints/<name>.json` directly. If `npm run dev` is running, the dev-server file watcher picks up the change and live-syncs your browser within ~200 ms. If you have unsaved canvas edits when an external write lands, the canvas doesn't silently reload: a conflict bar appears offering **Load latest** (discard your edits) or **Keep my edits** (your next Save overwrites the file).
 
 For Claude Code, the `/blueprint` skill at `.claude/skills/blueprint/SKILL.md` auto-loads when you're working in this repo and tells the agent when and how to use the CLI. For Codex, the `$blueprint` skill lives at `.codex/skills/blueprint/SKILL.md`.
 
@@ -114,7 +114,7 @@ For Claude Code, the `/blueprint` skill at `.claude/skills/blueprint/SKILL.md` a
 The vocabulary in "What is a blueprint?" is the built-in default. The full taxonomy is **extensible**, with three layers of resolution (highest priority first):
 
 1. Per-document override at `GraphFile.registry`.
-2. Workspace-level registry at `<workspace>/blueprint.types.toml` (gitignored; legacy `blueprint.types.toml` is still read as a fallback).
+2. Workspace-level registry at `<workspace>/blueprint.types.toml` (gitignored).
 3. Built-in default (7 node types × 2–3 statuses each, 5 edge types).
 
 Set up a workspace registry:
@@ -122,7 +122,6 @@ Set up a workspace registry:
 ```bash
 npm run blueprint -- registry --init      # writes <workspace>/blueprint.types.toml
 npm run blueprint -- registry --workspace # print it
-npm run blueprint -- registry --migrate   # convert legacy blueprint.types.toml
 ```
 
 Edit the TOML freely to add or rename types and statuses — comments are welcome. Per-doc overrides go in the `registry` field of any `blueprints/<doc>.json` (still JSON, since it's embedded in the document).
@@ -213,8 +212,7 @@ src/
 bin/blueprint.ts          CLI entry point (`npm run blueprint -- ...`)
 blueprints/               Workspace documents (per-machine, gitignored).
                         Includes blueprint.types.toml — the optional workspace
-                        registry override (legacy blueprint.types.toml still
-                        readable as a fallback).
+                        registry override.
 .claude/skills/blueprint/ Claude Code skill that wraps the CLI
 .codex/skills/blueprint/  Codex skill that wraps the CLI
 ```
