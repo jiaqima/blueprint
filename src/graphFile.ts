@@ -287,6 +287,13 @@ export function stripGraphForPersist(graph: Graph): Graph {
         data,
         selected: undefined,
         dragging: undefined,
+        // react-flow render-time measurements — not content. Leaving
+        // them in makes a CLI-written doc (which never has them) read
+        // as "unsaved" the moment the browser measures its nodes.
+        width: undefined,
+        height: undefined,
+        positionAbsolute: undefined,
+        resizing: undefined,
       };
     }),
     edges: graph.edges.map((e) => {

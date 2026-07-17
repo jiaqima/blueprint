@@ -182,7 +182,11 @@ function EdgeInspector({
 }
 
 // Markdown source on top, live KaTeX preview below. Local state with a
-// short debounce so we don't fire onChange on every keystroke.
+// short debounce so we don't fire onChange on every keystroke. External
+// changes to `initial` (e.g. a remote update) sync into the textarea only
+// while the user isn't typing; otherwise they're held and applied on blur
+// — same pattern as NotesPanel — so a write from the agent can't yank
+// text out from under the cursor.
 function BodyEditor({
   initial,
   onChange,
@@ -192,9 +196,22 @@ function BodyEditor({
 }) {
   const [text, setText] = useState(initial);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFocusedRef = useRef(false);
+  const editedSinceFocusRef = useRef(false);
+  const pendingExternalRef = useRef<string | null>(null);
 
   useEffect(() => {
-    setText(initial);
+    if (initial === text) {
+      pendingExternalRef.current = null;
+      return;
+    }
+    if (isFocusedRef.current) {
+      // Defer until the user is done.
+      pendingExternalRef.current = initial;
+    } else {
+      setText(initial);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial]);
 
   const schedule = (next: string) => {
@@ -211,12 +228,25 @@ function BodyEditor({
         className="inspector__body-input"
         value={text}
         onChange={(e) => {
+          editedSinceFocusRef.current = true;
           setText(e.target.value);
           schedule(e.target.value);
         }}
+        onFocus={() => {
+          isFocusedRef.current = true;
+          editedSinceFocusRef.current = false;
+        }}
         onBlur={() => {
+          isFocusedRef.current = false;
           if (timer.current) clearTimeout(timer.current);
-          if (text !== initial) onChange(text);
+          const pending = pendingExternalRef.current;
+          pendingExternalRef.current = null;
+          if (editedSinceFocusRef.current) {
+            // The user's typed text wins over any held external value.
+            if (text !== initial) onChange(text);
+          } else if (pending !== null) {
+            setText(pending);
+          }
         }}
         placeholder="Markdown with $math$ and $$display math$$"
         rows={8}

@@ -5,6 +5,7 @@ import { NotesPanel } from "./NotesPanel";
 import { Inspector } from "./Inspector";
 import {
   defaultRegistry,
+  defaultUi,
   graphFileJson,
   normalizeGraphFile,
   seedGraphFile,
@@ -15,6 +16,7 @@ import {
   debounce,
   loadActiveDocumentPath,
   loadRecovery,
+  loadRecoveryDirty,
   saveActiveDocumentPath,
   saveRecovery,
 } from "./storage";
@@ -42,10 +44,21 @@ import type {
 export type SaveResult = "saved" | "needs-path" | "error";
 export type SaveAsResult = "saved" | "exists" | "error";
 
+// Content-level identity for a GraphFile: ignores `ui` (viewport /
+// selection / collapse) so a recovered snapshot that differs only by
+// pan/zoom doesn't count as unsaved work.
+function contentJson(file: GraphFile): string {
+  return graphFileJson(stripFileForPersist({ ...file, ui: defaultUi() }));
+}
+
 export default function App() {
+  const recoveredFile = useMemo<GraphFile | null>(() => loadRecovery(), []);
+  // Captured at startup, before the debounced recovery saves below start
+  // rewriting the flag.
+  const recoveredWasDirty = useMemo(() => loadRecoveryDirty(), []);
   const initialFile = useMemo<GraphFile>(
-    () => loadRecovery() ?? seedGraphFile(),
-    [],
+    () => recoveredFile ?? seedGraphFile(),
+    [recoveredFile],
   );
   const cleanSeedJson = useMemo(() => graphFileJson(seedGraphFile()), []);
 
@@ -57,6 +70,16 @@ export default function App() {
   const [dirty, setDirty] = useState(
     () => graphFileJson(initialFile) !== cleanSeedJson,
   );
+  // Mirror of `dirty` for callbacks whose closures outlive a render
+  // (the SSE handler below).
+  const dirtyRef = useRef(dirty);
+  useEffect(() => {
+    dirtyRef.current = dirty;
+  }, [dirty]);
+  // Set when the active document changed on disk while the editor holds
+  // unsaved changes; rendered as a conflict bar instead of silently
+  // replacing the user's work.
+  const [conflictPath, setConflictPath] = useState<string | null>(null);
   const mapRef = useRef<MindMapHandle>(null);
   const [online, setOnline] = useState<boolean | null>(null);
   const [registryResp, setRegistryResp] = useState<RegistryResponse | null>(null);
@@ -95,16 +118,17 @@ export default function App() {
 
   const debouncedRecoverySave = useMemo(
     () =>
-      debounce((file: GraphFile) => {
-        saveRecovery(file);
+      debounce((file: GraphFile, isDirty: boolean) => {
+        saveRecovery(file, isDirty);
       }, 250),
     [],
   );
 
   useEffect(() => {
     const clean = stripFileForPersist(graphFile);
-    debouncedRecoverySave(clean);
-    setDirty(graphFileJson(clean) !== lastSavedJsonRef.current);
+    const nextDirty = graphFileJson(clean) !== lastSavedJsonRef.current;
+    debouncedRecoverySave(clean, nextDirty);
+    setDirty(nextDirty);
   }, [graphFile, debouncedRecoverySave]);
 
   useEffect(() => {
@@ -124,11 +148,29 @@ export default function App() {
       if (canLoadLast) {
         const document = await loadDocument(lastPath);
         if (!document || !alive) return;
+        // If the recovery snapshot holds unsaved work that differs from
+        // the on-disk document, ask before discarding it. A snapshot
+        // taken while clean is just a stale copy — never prompt for it.
+        const restoreRecovered =
+          recoveredFile !== null &&
+          recoveredWasDirty &&
+          contentJson(recoveredFile) !== contentJson(document.file) &&
+          confirm(
+            `Restore unsaved changes recovered from your last session of "${document.name}"?\n\n` +
+              "OK — keep the recovered version in the editor (unsaved).\n" +
+              "Cancel — load the saved file and discard the recovered changes.",
+          );
         lastSavedJsonRef.current = graphFileJson(document.file);
         setActiveDocumentPath(document.path);
         setDocumentName(document.name);
-        setDirty(false);
-        replaceEditorFile(document.file);
+        if (restoreRecovered) {
+          // The editor already shows the recovered snapshot; leave it in
+          // place, marked unsaved against the on-disk version.
+          setDirty(true);
+        } else {
+          setDirty(false);
+          replaceEditorFile(document.file);
+        }
         return;
       }
 
@@ -138,7 +180,7 @@ export default function App() {
     return () => {
       alive = false;
     };
-  }, [cleanSeedJson, replaceEditorFile]);
+  }, [cleanSeedJson, recoveredFile, recoveredWasDirty, replaceEditorFile]);
 
   useEffect(() => {
     let alive = true;
@@ -148,6 +190,12 @@ export default function App() {
         onDisconnect: () => setOnline(false),
         onGraphChanged: async (_origin, path) => {
           if (!path || path !== activeDocumentPath) return;
+          if (dirtyRef.current) {
+            // Unsaved editor changes — don't clobber them. Surface a
+            // conflict bar and let the user pick a side.
+            setConflictPath(path);
+            return;
+          }
           const document = await loadDocument(path);
           if (!document || !alive) return;
 
@@ -160,6 +208,7 @@ export default function App() {
           });
         },
         onWorkspaceChanged: async () => {
+          setConflictPath(null);
           // Refresh registry (the new workspace may have a different
           // blueprint.types.toml or none at all).
           const reg = await fetchRegistry();
@@ -209,6 +258,24 @@ export default function App() {
     );
   }, [dirty]);
 
+  // Conflict-bar actions: load the on-disk version (discarding local
+  // edits), or keep editing (the next Save overwrites the file).
+  const handleConflictReload = useCallback(async () => {
+    if (!conflictPath) return;
+    const document = await loadDocument(conflictPath);
+    setConflictPath(null);
+    if (!document) return;
+    lastSavedJsonRef.current = graphFileJson(document.file);
+    setActiveDocumentPath(document.path);
+    setDocumentName(document.name);
+    setDirty(false);
+    replaceEditorFile(document.file);
+  }, [conflictPath, replaceEditorFile]);
+
+  const handleConflictKeep = useCallback(() => {
+    setConflictPath(null);
+  }, []);
+
   const handleListDocuments = useCallback(async (): Promise<
     DocumentEntry[] | null
   > => {
@@ -231,6 +298,7 @@ export default function App() {
       setDocumentName(document.name);
       saveActiveDocumentPath(document.path);
       setDirty(false);
+      setConflictPath(null);
       replaceEditorFile(document.file);
       return true;
     },
@@ -245,6 +313,7 @@ export default function App() {
     setDocumentName("Untitled");
     saveActiveDocumentPath(null);
     setDirty(false);
+    setConflictPath(null);
     replaceEditorFile(next);
   }, [confirmDiscardIfDirty, replaceEditorFile]);
 
@@ -262,6 +331,7 @@ export default function App() {
     setGraphFile(saved.file);
     saveRecovery(saved.file);
     setDirty(false);
+    setConflictPath(null);
     return "saved";
   }, [activeDocumentPath, currentGraphFile]);
 
@@ -280,6 +350,7 @@ export default function App() {
       setGraphFile(saved.file);
       saveRecovery(saved.file);
       setDirty(false);
+      setConflictPath(null);
       return "saved";
     },
     [currentGraphFile],
@@ -478,6 +549,23 @@ export default function App() {
         onImportFile={handleImportFile}
         getCurrentFile={currentGraphFile}
       />
+      {conflictPath !== null && (
+        <div className="conflict-bar" role="alert">
+          <span className="conflict-bar__text">
+            "{documentName}" changed on disk while you have unsaved changes
+            here.
+          </span>
+          <button onClick={handleConflictReload}>
+            Load latest (discard my edits)
+          </button>
+          <button
+            onClick={handleConflictKeep}
+            title="Keep editing; your next Save overwrites the on-disk version"
+          >
+            Keep my edits
+          </button>
+        </div>
+      )}
       <div className="app__body">
         <div className="canvas">
           <MindMap
