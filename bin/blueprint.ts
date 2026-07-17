@@ -140,7 +140,7 @@ Usage:
 Documents:
   list                                       List all documents in the workspace
   show <doc> [--json]                        Print outline of <doc>
-  find <doc> <query>                         Find nodes whose label or data.id matches <query>
+  find <doc> <query>                         Find nodes whose label matches <query>
   lint <doc>                                 Print soft warnings about structural issues
   config                                     Print the resolved workspace dir
 

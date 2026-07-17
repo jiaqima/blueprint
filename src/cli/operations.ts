@@ -552,7 +552,7 @@ export function synthesize(
   };
 
   // Apply the type (default: synthesis). setNodeType picks up the type's
-  // defaultStatus, so a fresh synthesis lands as `sketched`.
+  // defaultStatus, so a fresh synthesis lands as `draft`.
   result = setNodeType(
     result,
     synth.id,

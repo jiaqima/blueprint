@@ -1,10 +1,5 @@
+import { nextNodeId } from "./idgen";
 import type { Graph, MindNode, MindEdge } from "./types";
-
-let counter = 0;
-function nextId(): string {
-  counter += 1;
-  return `n_${Date.now().toString(36)}_${counter}`;
-}
 
 type Line = { depth: number; text: string };
 
@@ -35,6 +30,15 @@ export function parseMarkdownOutline(text: string): Graph {
     return { nodes: [], edges: [] };
   }
 
+  // Import replaces the whole graph, so only intra-parse uniqueness
+  // matters; the shared generator plus the minted set guarantee it.
+  const minted = new Set<string>();
+  const mint = (): string => {
+    const id = nextNodeId(minted);
+    minted.add(id);
+    return id;
+  };
+
   // Normalize: bullets sitting under headings become children of the heading.
   // Run a stack-based attach using raw depths; bullets always have depth >= 100,
   // so they naturally nest under any heading.
@@ -46,7 +50,7 @@ export function parseMarkdownOutline(text: string): Graph {
     while (stack.length > 0 && stack[stack.length - 1].depth >= line.depth) {
       stack.pop();
     }
-    const id = nextId();
+    const id = mint();
     nodes.push({
       id,
       type: "mind",
@@ -67,7 +71,7 @@ export function parseMarkdownOutline(text: string): Graph {
   // If multiple top-level nodes (no shared root), wrap them under a synthetic root
   const topLevel = nodes.filter((n) => !edges.some((e) => e.target === n.id));
   if (topLevel.length > 1) {
-    const rootId = nextId();
+    const rootId = mint();
     nodes.unshift({
       id: rootId,
       type: "mind",

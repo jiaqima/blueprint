@@ -20,8 +20,6 @@ import {
   setWorkspaceConfig,
 } from "./workspace";
 
-type Options = Record<string, never>;
-
 type SseClient = { id: number; res: ServerResponse; path?: string };
 
 type DocumentEntry = {
@@ -92,7 +90,7 @@ function sendJson(res: ServerResponse, statusCode: number, data: unknown) {
   res.end(JSON.stringify(data));
 }
 
-export function blueprintSync(_opts: Options = {}): Plugin {
+export function blueprintSync(): Plugin {
   let root = "";
   let documentsPath = "";
   let documentsWatcher: FSWatcher | null = null;
@@ -248,7 +246,6 @@ export function blueprintSync(_opts: Options = {}): Plugin {
     fileSnapshots.clear();
     documentsPath = getWorkspaceDir(root);
     const ws = describeWorkspaceSource(root);
-    // eslint-disable-next-line no-console
     console.log(
       `[blueprint-sync] workspace switched to: ${ws.dir} (from ${ws.source})`,
     );
@@ -318,7 +315,6 @@ export function blueprintSync(_opts: Options = {}): Plugin {
       root = server.config.root;
       documentsPath = getWorkspaceDir(root);
       const ws = describeWorkspaceSource(root);
-      // eslint-disable-next-line no-console
       console.log(
         `[blueprint-sync] workspace: ${ws.dir} (from ${ws.source})`,
       );
@@ -407,7 +403,6 @@ export function blueprintSync(_opts: Options = {}): Plugin {
             try {
               setWorkspaceConfig(root, next);
             } catch (err) {
-              // eslint-disable-next-line no-console
               console.error("[blueprint-sync] setWorkspaceConfig failed:", err);
               res.statusCode = 500;
               res.end("failed to write config");

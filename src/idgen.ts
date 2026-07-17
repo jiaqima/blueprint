@@ -1,6 +1,7 @@
 // System node-id generator. Shared between the browser (MindMap.tsx,
-// when the user creates a node on the canvas) and the CLI
-// (cli/operations.ts, when an `add` / `synthesize` etc. mints one).
+// when the user creates a node on the canvas), the CLI
+// (cli/operations.ts, when an `add` / `synthesize` etc. mints one),
+// and the Markdown importer (markdown.ts).
 //
 // Shape: `n_<base62 seconds since epoch>_<counter>`, e.g. "n_1wIjg7_1".
 //   - The `n_` prefix distinguishes node ids from edge ids (`e_…`).
