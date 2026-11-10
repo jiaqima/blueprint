@@ -1,0 +1,1788 @@
+{
+  "nodes": [
+    {
+      "id": "n_thesis",
+      "type": "mind",
+      "position": {
+        "x": 2050,
+        "y": 984
+      },
+      "data": {
+        "label": "Thesis: rebalance generation/verification costs via artifact-level redesign",
+        "body": "## Central position\nAI-era science should rebalance the costs of generating and verifying scientific artifacts by redesigning epistemic infrastructure at the level of the artifact - the unit on which the ecosystem's filters operate. The paper frames this as an engineering view of science: under AI abundance, scientific artifacts should be designed not only for effective communication but also for robust verification.\n\nSupport structure: the problem premise (C1: the cost imbalance creates conditions for pollution), its escalation to the ecosystem level (which places the intervention at the artifact), the necessity premise (better AI alone is not enough), the possibility premise (recording structure is designed to rebalance costs at the artifact level), and the feasibility premise (a concrete instantiation exists).\n\nScope: the position concerns the artifact forms of claim-and-evidence-structured research (see 'Risk: disciplinary scope'), and treats artifact redesign as complementary to other interventions rather than a replacement for them (see 'Risk: other interventions suffice').\n\n**Status call:** marked `supported` in the sense that the paper's own argument settles this normative position. The *empirical payoff* of the specific instantiation is deliberately kept separate and `stated` (see 'Hypothesis: blueprints lower verification cost in practice').",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_def_infra",
+      "type": "mind",
+      "position": {
+        "x": 1930,
+        "y": 1148
+      },
+      "data": {
+        "label": "Def: epistemic infrastructure",
+        "body": "## Term\n*Epistemic infrastructure*: the artifacts, workflows, and norms through which scientific claims are produced, reviewed, and accepted (Merton, 1973; Hicks et al., 2015).\nPinned here because the thesis quantifies over this term.",
+        "typeId": "definition",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_def_pollution",
+      "type": "mind",
+      "position": {
+        "x": 470,
+        "y": 820
+      },
+      "data": {
+        "label": "Def: epistemic pollution",
+        "body": "## Term\n*Epistemic pollution*: contamination of scientific literature and adjacent knowledge systems (preprint repositories, peer review records, citation graphs, benchmark leaderboards, replication corpora, AI training data) by artifacts that look like legitimate scientific contributions but cannot be relied upon.\nExplicitly distinguished from fraud, predatory publishing, and public misinformation: pollution sits between these - it includes negligent, low-effort artifacts that are not strictly fraudulent, reaches mainstream venues rather than only the predatory fringe, and degrades the infrastructure scientists rely on for their own work.",
+        "typeId": "definition",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_def_validity",
+      "type": "mind",
+      "position": {
+        "x": 2715,
+        "y": 656
+      },
+      "data": {
+        "label": "Def: validity vs novelty/significance",
+        "body": "## Term\n*Validity*: whether claims are actually supported by the evidence, methods, assumptions, and reasoning offered - vs *novelty* (does this contribute something the field did not already know?) and *significance* (does the contribution matter, and to whom?). These are the most commonly cited review dimensions (Lee et al., 2013; Bornmann, 2011). They are not exhaustive - reviewers also evaluate clarity, scope, and fit (Lee et al., 2013) - but these three most directly determine whether an artifact enters the trusted knowledge base.",
+        "typeId": "definition",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_def_blueprint",
+      "type": "mind",
+      "position": {
+        "x": 4130,
+        "y": 984
+      },
+      "data": {
+        "label": "Def: blueprint",
+        "body": "## Term\n*Blueprint*: a structured, decomposed representation of a research project - an argument graph of typed entities (claims, evidence, assumptions, definitions) connected by typed relations (supports, expands, contradicts). Data model: a heterogeneous directed graph; each node carries an ID, type, status, label, and optional Markdown body; one JSON document.\nBlueprints complement rather than replace papers: the paper remains the narrative interface, the blueprint becomes the verification interface. They are not a new theory of argument or a new semantic-publishing ontology; they adapt existing structured-argument ideas (Toulmin, 2003; Kunz and Rittel, 1970) into an author-facing artifact that makes support structure explicit and locally inspectable.",
+        "typeId": "definition",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_pollution",
+      "type": "mind",
+      "position": {
+        "x": 350,
+        "y": 656
+      },
+      "data": {
+        "label": "Epistemic pollution is already visible",
+        "body": "## Claim\nEpistemic pollution is already visible across the surface area of the literature.\nSupported by four lines of evidence: the preprint stream (LLM-associated writing change at scale, the arXiv survey moderation change, automated survey writing), AI-generated peer reviews, fabricated papers and hallucinated citations, and corroborating strain on adjacent infrastructure (journal AI-use policies, paper mills, false authorship).",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_arxiv",
+      "type": "mind",
+      "position": {
+        "x": 0,
+        "y": 492
+      },
+      "data": {
+        "label": "Preprint stream: LLM-era writing & the survey 'DDoS'",
+        "body": "## Evidence\nLarge-scale analyses find substantial LLM-associated changes in scientific writing and production patterns (Liang et al., 2025; Kusumegi et al., 2025). In October 2025, arXiv's computer science category changed its moderation policy for survey articles, requiring them to have passed a successful peer review - a change attributed to generative AIs making papers without new research results fast and easy to write (Jones, 2026). Automated survey-writing systems make the same capability concrete (Wang et al., 2024), and a recent commentary frames the volume of AI-generated surveys flooding preprint platforms as a 'survey paper DDoS attack' (Lin et al., 2025).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_reviews",
+      "type": "mind",
+      "position": {
+        "x": 240,
+        "y": 492
+      },
+      "data": {
+        "label": "AI-generated peer reviews at scale (21%)",
+        "body": "## Evidence\nA study reported in *Nature* found that 21% of manuscript reviews for a major AI conference were generated by AI (Naddaf, 2025), raising the prospect of a feedback loop in which AI-generated submissions are evaluated by AI-generated reviews (Kim et al., 2025; Wei et al., 2026). LLMs are also being tested as part of the review pipeline itself, at scale and in randomized peer-review interventions (Liang et al., 2024; Thakkar et al., 2026).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_fabricated",
+      "type": "mind",
+      "position": {
+        "x": 480,
+        "y": 492
+      },
+      "data": {
+        "label": "Fabricated papers & hallucinated citations",
+        "body": "## Evidence\nGPT-fabricated scientific papers appearing on Google Scholar (Haider et al., 2024), and hallucinated citations polluting the scientific literature (Naddaf and Quill, 2026), including hundreds of papers with hallucinated references in ACL conferences (Sakai et al., 2026).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_adjacent",
+      "type": "mind",
+      "position": {
+        "x": 720,
+        "y": 492
+      },
+      "data": {
+        "label": "Adjacent pressure: lagging policies, paper mills, false authorship",
+        "body": "## Evidence (adjacent pressure)\nLarge-scale evidence suggests that journal AI-use policies have not produced reliable disclosure or restrained AI-assisted writing (He and Bu, 2026). Paper-mill operations are scaling with generative AI, and documented cases of AI-generated articles falsely attributed to real researchers show that authorship metadata can itself be corrupted (Spinellis, 2025).\nKept as a separate node per the authoring convention: this is strain on *adjacent* integrity infrastructure rather than a directly observed polluted-artifact case (separate direct evidence from adjacent pressure).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_aisci",
+      "type": "mind",
+      "position": {
+        "x": 840,
+        "y": 328
+      },
+      "data": {
+        "label": "AI Scientist-v2 passes workshop threshold",
+        "body": "## Evidence\nThe authors of AI Scientist-v2 report that an end-to-end autonomous research system could formulate hypotheses, run experiments, and author a manuscript that exceeded an ICLR workshop's average human acceptance threshold for a fully autonomous submission (Yamada et al., 2025; Lu et al., 2024).\nThe paper's own reading: not a milestone of AI capability per se, but a demonstration that candidate generation has become powerful enough that the surrounding verification infrastructure is now the bottleneck.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_gencheap",
+      "type": "mind",
+      "position": {
+        "x": 960,
+        "y": 492
+      },
+      "data": {
+        "label": "Generation cost has collapsed",
+        "body": "## Claim\nAI dramatically lowers the cost of generating plausible scientific artifacts. Producing a plausible paper, review, survey, or benchmark report used to require time, expertise, data, analysis, and revision, and authorship itself functioned as a costly signal of seriousness; AI can substantially lower much of that production cost.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_gencost",
+      "type": "mind",
+      "position": {
+        "x": 1080,
+        "y": 328
+      },
+      "data": {
+        "label": "Low-cost generation across artifact types",
+        "body": "## Evidence\nPapers, reviews, hypotheses, code, and literature surveys can now be generated at low cost (Lu et al., 2024; Tang et al., 2025; Yamada et al., 2025).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_vercost",
+      "type": "mind",
+      "position": {
+        "x": 1320,
+        "y": 492
+      },
+      "data": {
+        "label": "Verification cost has not fallen comparably",
+        "body": "## Claim\nThe cost of verifying such artifacts has not fallen to a comparable degree. AI-generated artifacts have also introduced new failure modes that verification must screen for - hallucinated citations (Naddaf and Quill, 2026; Sakai et al., 2026), unfaithful summaries, code that does not match the described method, results not produced by the stated procedure. At this time, the cost ratio between generating and checking a scientific artifact is sharply imbalanced.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_verifweak",
+      "type": "mind",
+      "position": {
+        "x": 1330,
+        "y": 328
+      },
+      "data": {
+        "label": "Automated verification benchmarks are weak",
+        "body": "## Evidence\nAutomated verification - the natural defensive response - is itself currently weak: recent benchmarks for detecting significant errors in scientific manuscripts find recall far below what would be needed for meaningful filtering (Son et al., 2025), and benchmarks for automated reproducibility assessment in social science report similar gaps (Hu et al., 2025).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_histfilter",
+      "type": "mind",
+      "position": {
+        "x": 1560,
+        "y": 492
+      },
+      "data": {
+        "label": "Assumption: generation cost was the implicit filter",
+        "body": "## Assumption\nHistorically, high generation cost served as a rough filter for unreliable artifacts: producing a plausible artifact demanded substantial expertise, labor, and time, and the existing filters of peer review, citation, and venue prestige depended implicitly on that cost as a parameter.\n**Recorded as an assumption:** the paper asserts this historical premise (its citations, Merton 1973 and Hicks et al. 2015, cover the infrastructure itself, not its filtering function) rather than arguing it. It is load-bearing for the cost-ratio diagnosis.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_syn_costshift",
+      "type": "mind",
+      "position": {
+        "x": 1200,
+        "y": 656
+      },
+      "data": {
+        "label": "Joint: cost-ratio shift strips filters of power",
+        "body": "## Joint argument\nThe three premises only bite together:\n1. Existing filters (peer review, citation, venue prestige) were calibrated to a world where generation cost itself did the filtering (assumption).\n2. The generation side of the cost ratio has collapsed.\n3. The verification side has not moved comparably.\nTherefore the existing filters do not break on their own terms - they simply lose the cost differential that gave them their discriminating power. No single premise yields the conclusion; the argument is about the *ratio*, which is why the premises are routed through this synthesis.",
+        "typeId": "synthesis",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_imbalance",
+      "type": "mind",
+      "position": {
+        "x": 1190,
+        "y": 820
+      },
+      "data": {
+        "label": "C1: pollution stems from the cost imbalance",
+        "body": "## Contribution 1\nThe cost imbalance between cheap AI generation and expensive verification creates conditions for epistemic pollution - the contamination of scientific knowledge systems by plausible but unreliable artifacts.\nThe paper diagnoses pollution as a cost-ratio problem rather than merely a bad-actor problem. The diagnosis is infrastructural rather than behavioral: not that authors or reviewers have stopped doing their jobs, but that the infrastructure they operate within was calibrated to a cost ratio that no longer holds.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_noai",
+      "type": "mind",
+      "position": {
+        "x": 1875,
+        "y": 820
+      },
+      "data": {
+        "label": "Better AI alone is not enough",
+        "body": "## Claim\nBetter AI systems cannot be relied on to resolve the imbalance on their own. Stronger generators may produce fewer hallucinations and stronger verifiers may catch more errors, but the paper is skeptical of relying on this alone, for two reasons:\n1. The problem is structural, not only capability-bound - the infrastructure remains exploitable by anyone willing to use less reliable systems.\n2. The generation-verification asymmetry does not scale symmetrically with capability.\nHence the redesign question: not only whether AI systems can be improved, but how the infrastructure in which AI-generated and AI-assisted artifacts circulate should be redesigned to handle the cost structure AI has produced.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_exploit",
+      "type": "mind",
+      "position": {
+        "x": 1820,
+        "y": 656
+      },
+      "data": {
+        "label": "Assumption: infrastructure stays exploitable",
+        "body": "## Assumption\nThe infrastructure rewards plausibility and remains exploitable by less-reliable actors regardless of frontier capability: paper mills, citation farms, low-effort authors, fake reviewers, automated submission systems, and institutions rewarded by publication counts all benefit from artifacts that pass existing filters without improving knowledge; as long as plausibility is cheap to produce, verification bears the load and improvements in the best generators do little to relieve it.\n**Recorded as an assumption:** asserted by enumeration of actors and incentives, not argued from evidence.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_parallel",
+      "type": "mind",
+      "position": {
+        "x": 2170,
+        "y": 656
+      },
+      "data": {
+        "label": "Assumption: verification scales worse than generation",
+        "body": "## Assumption\nA capability improvement in generation lets one actor produce many more plausible artifacts at marginal cost; a capability improvement in verification must be applied per artifact, and verification of a complex scientific claim does not parallelize as readily as generation of a plausible-looking one - so even under optimistic assumptions about verifier capability, the two costs remain on different scaling curves.\n**Recorded as an assumption:** the scaling asymmetry is asserted, not demonstrated. Its capability side - that gains in generation do not bring commensurate gains in verification - has cited evidence, recorded as a separate supporter of the parent claim ('Generation outpaces self-verification in LLMs').",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_components",
+      "type": "mind",
+      "position": {
+        "x": 1875,
+        "y": 164
+      },
+      "data": {
+        "label": "Assumption: verification decomposes into six components",
+        "body": "## Assumption\nVerification work typically includes some combination of: identifying the central claims the artifact makes; locating the evidence offered in support of each claim; recovering the assumptions on which the argument depends, including unstated ones; checking that claimed support relations actually hold rather than merely being asserted; evaluating whether the methods chosen are appropriate; and tracking the risks, limitations, contradictions, and open questions that qualify the central claims. The components are not equally costly.\n**Recorded as an assumption:** the paper offers this decomposition as an observation about review practice, citing the peer-review literature (Bornmann, 2011; Lee et al., 2013), rather than arguing for it.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_perverifier",
+      "type": "mind",
+      "position": {
+        "x": 1625,
+        "y": 328
+      },
+      "data": {
+        "label": "Assumption: verification cost is paid per verifier",
+        "body": "## Assumption\nEvery verification component is paid *per verifier*: the author bears the cost of structuring an argument once; each subsequent reader, reviewer, or AI system that needs to verify it bears a reconstruction cost in turn. The asymmetry compounds: a small reduction in per-artifact verification cost is paid forward to every downstream verifier, and a small increase compounds the same way. Verification cost is a distribution across components, paid many times by many parties.\n**Recorded as an assumption:** asserted as an observation about how reading and reviewing work, not argued.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_social",
+      "type": "mind",
+      "position": {
+        "x": 2290,
+        "y": 164
+      },
+      "data": {
+        "label": "Assumption: novelty/significance first judged at the surface",
+        "body": "## Assumption\nNovelty and significance are, on close inspection, partly social judgments that depend on field context external to the artifact (what the field has established; what the field cares about). In many cases a reviewer can form an initial judgment on both from an abstract, a figure, and a sense of the field, even if a final judgment may require deeper engagement.\n**Recorded as an assumption:** an appeal to review practice, not argued from evidence.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_noveltysig",
+      "type": "mind",
+      "position": {
+        "x": 2290,
+        "y": 328
+      },
+      "data": {
+        "label": "Artifact design has less leverage on novelty/significance",
+        "body": "## Claim\nArtifact design has more limited direct leverage on novelty and significance: a more structured artifact does not change whether a result is genuinely new or important, only how clearly it is communicated.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_tracing",
+      "type": "mind",
+      "position": {
+        "x": 2530,
+        "y": 164
+      },
+      "data": {
+        "label": "Assumption: validity requires tracing reasoning chains",
+        "body": "## Assumption\nChecking whether claims hold requires tracing extended chains of reasoning through evidence, methods, and assumptions; where novelty and significance can sometimes be judged initially at the surface, validity requires this tracing.\n**Recorded as an assumption:** an appeal to what checking claims involves, taken as given.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_validitylabor",
+      "type": "mind",
+      "position": {
+        "x": 1865,
+        "y": 328
+      },
+      "data": {
+        "label": "Validity is often especially labor-intensive",
+        "body": "## Claim\nValidity is often especially labor-intensive to verify: where novelty and significance can sometimes be judged initially at the surface, validity requires tracing extended chains of reasoning, running through nearly every component of the verification-work decomposition.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_structure",
+      "type": "mind",
+      "position": {
+        "x": 2530,
+        "y": 328
+      },
+      "data": {
+        "label": "Assumption: validity lives in the artifact's argument structure",
+        "body": "## Assumption\nA claim's validity is fundamentally a property of the argument structure connecting it to its evidence, and the artifact is what records (or fails to record) that structure. Novelty and significance live partly in the field's collective context; validity lives more directly in the artifact itself.\n**Recorded as an assumption:** a conceptual premise the paper asserts rather than argues; it carries the 'leverage' half of Contribution 2.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_validity_bottleneck",
+      "type": "mind",
+      "position": {
+        "x": 2705,
+        "y": 492
+      },
+      "data": {
+        "label": "C2: validity is the cost concentration",
+        "body": "## Contribution 2\nVerification cost often concentrates in validity, and validity is the component where artifact design has the clearest direct leverage; this asymmetry is what motivates the rest of the paper's argument. Validity verification is often especially expensive because prose papers compress multi-step reasoning into narrative form.\nScope: the paper does not claim to address novelty or significance verification. The burden of those judgments also grows as submission volume grows, and it is real - but it calls for responses of its own, and it is not where the artifact-level intervention is most likely to pay off.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_authorgraph",
+      "type": "mind",
+      "position": {
+        "x": 3935,
+        "y": 0
+      },
+      "data": {
+        "label": "Assumption: authors hold an argument graph in mind",
+        "body": "## Assumption\nWhen an author writes a paper, they hold something like a graph in mind: a set of claims, the evidence they have for each, the assumptions they are making, the dependencies among the claims, and the risks and limitations they have noticed.\n**Recorded as an assumption:** a psychological premise the compression argument requires; asserted, not evidenced.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_compress",
+      "type": "mind",
+      "position": {
+        "x": 3935,
+        "y": 164
+      },
+      "data": {
+        "label": "Prose compresses the graph, discarding structure",
+        "body": "## Claim\nWriting the paper compresses the author's argument graph into a linear text optimized for clarity, persuasion, and conformity to a venue's expectations - and the compression discards information: implicit assumptions are not written down because they would be tedious to enumerate; dependencies between claims are signaled by transitional phrases rather than recorded as edges; limitations may be acknowledged in a paragraph and not propagated to the claims they qualify.\nProse thereby 'serializes an argument graph into a reading order designed for narrative flow rather than for inspection'.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_reconstruct",
+      "type": "mind",
+      "position": {
+        "x": 2770,
+        "y": 328
+      },
+      "data": {
+        "label": "Verifiers must reverse the compression",
+        "body": "## Claim\nA reviewer who wants to verify the paper must reverse the compression: identify central claims distributed across the artifact in slightly different forms; locate the evidence for each; infer implicit assumptions the author rarely lists; check whether asserted support relations actually hold, often requiring recomputing or rereading; track risks and contradictions acknowledged in one place and silently violated in another. Each step reconstructs structure that existed in the author's head but was not recorded in the artifact - or, increasingly, was never produced at all when an AI system generated the serialization without an underlying graph.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_prose",
+      "type": "mind",
+      "position": {
+        "x": 2358.940513604652,
+        "y": 497.76356918372085
+      },
+      "data": {
+        "label": "Prose form (not validity itself) makes verification expensive",
+        "body": "## Claim (one of the three pillars the paper's proposal rests on)\nValidity is not intrinsically expensive to verify; it is expensive to verify *given the artifact form in which scientific arguments are currently delivered*. The dominant form - the prose paper - has a specific structural property that makes validity verification costly: it serializes the argument graph into reading order.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_aihard",
+      "type": "mind",
+      "position": {
+        "x": 3445,
+        "y": 492
+      },
+      "data": {
+        "label": "Prose is also the constraint for AI verifiers",
+        "body": "## Claim\nAI verification of prose papers is harder than the surface symmetry between AI generation and AI verification might suggest: a long prose argument can exceed the context window or reasoning depth current models handle reliably for non-trivial scientific work, and the linearization removes precisely the local structure an AI system could otherwise check piece by piece. Better models will help, but the artifact form is itself the constraint: a verifier - human or AI - cannot easily check what the artifact has not recorded.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_desiderata",
+      "type": "mind",
+      "position": {
+        "x": 2465,
+        "y": 656
+      },
+      "data": {
+        "label": "Artifacts should be structured & decomposed",
+        "body": "## Claim (design implication)\nIf a major verification cost is reconstruction of argument structure the author had but did not record, the remedy is for the artifact to record that structure in the first place. Two design desiderata follow:\n1. **Structured rather than prose-first** - the argument graph is recorded explicitly as the primary representation; prose, where needed, is generated from or attached to the graph rather than serving as its only form.\n2. **Decomposed rather than monolithic** - the graph is broken into shorter local arguments that can be inspected, doubted, or amended independently, rather than packaged as a single linear narrative whose components cannot be addressed in isolation.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_redistribute",
+      "type": "mind",
+      "position": {
+        "x": 2235,
+        "y": 820
+      },
+      "data": {
+        "label": "Recording structure rebalances costs in principle",
+        "body": "## Claim (in-principle rebalancing; one of the three pillars the paper's proposal rests on)\nTogether, the two desiderata are designed to redistribute the structure work from many downstream verifiers to one upstream author: the author pays an upfront cost - recording explicitly what would otherwise have been left implicit - with the aim that every downstream verifier pays less. This is what rebalancing the costs of generation and verification would look like at the artifact level. The property it ultimately rests on is distributable review.\n\n**Status call:** `supported` as an in-principle design argument, by the paper's own lights. Whether the redistribution obtains *in practice* is deliberately split into the separate `stated` hypothesis node (per the convention: design intention, intended payoff, and demonstrated effect are different things).",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_leanbp",
+      "type": "mind",
+      "position": {
+        "x": 4000,
+        "y": 328
+      },
+      "data": {
+        "label": "leanblueprint & the PFR formalization",
+        "body": "## Evidence\nleanblueprint: a tool used in the Lean theorem prover community (de Moura et al., 2015; Yang et al., 2023) to plan, decompose, and track formalization of long mathematical proofs. A 'blueprint' there is a typed graph - nodes are mathematical statements (definitions, lemmas, theorems), edges record dependency, each node carries a status flag indicating whether it has been formally checked by Lean.\nCanonical demonstration: the Lean formalization of the Polynomial Freiman-Ruzsa conjecture, where Tao and collaborators used a leanblueprint to coordinate a distributed effort across many contributors, including non-experts who could pick up local lemmas without holding the full proof in mind.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_precedent",
+      "type": "mind",
+      "position": {
+        "x": 4620,
+        "y": 492
+      },
+      "data": {
+        "label": "leanblueprint embodies the desiderata in formal math",
+        "body": "## Claim\nOne existing artifact already embodies the design desiderata. Two features matter:\n1. The artifact *is* the structure: the graph records the proof's logical skeleton directly, and the prose attached to each node is supplementary; a reviewer or contributor can inspect a single lemma and its dependencies without reading a paper.\n2. The structure makes verification *distributable*: because each node is small and locally specified, contributors can work on individual lemmas in parallel, and the global proof status is a function of the per-node statuses.\nThese features instantiate the structured-and-decomposed desiderata in concrete form.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_nokernel",
+      "type": "mind",
+      "position": {
+        "x": 3805,
+        "y": 492
+      },
+      "data": {
+        "label": "Assumption: general research has no kernel",
+        "body": "## Assumption\nleanblueprint works because Lean provides a formal proof obligation: a node is either machine-verified or it is not. General research has no such criterion - science beyond mathematics admits no formal proof obligation, and no kernel exists to arbitrate, so 'proved' status is a fact in formal mathematics but cannot be one outside it.\n**Recorded as an assumption:** a premise about the epistemology of general research, taken as given.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_adapt",
+      "type": "mind",
+      "position": {
+        "x": 3880,
+        "y": 656
+      },
+      "data": {
+        "label": "Adaptation: lifecycle statuses, soft lint, extensible vocab",
+        "body": "## Claim\nleanblueprint cannot be transplanted directly; the proposal adapts its kind of structured, decomposed argument graph to settings where verification is non-binary, where vocabularies vary by field, and where human and AI agents are both first-class users. The goal is not deductive certification but easier inspection.\nConcretely: lifecycle statuses instead of a binary proof-checked flag, a three-layer extensible type/status vocabulary, and soft structural lint instead of a kernel.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_datamodel",
+      "type": "mind",
+      "position": {
+        "x": 4380,
+        "y": 492
+      },
+      "data": {
+        "label": "Prototype: data model & typed vocabulary",
+        "body": "## Evidence\nPrototype data model and vocabulary (the prototype is open source at https://github.com/jiaqima/blueprint):\n- Heterogeneous directed graph; each node carries an ID, type, status, label, and optional Markdown body with mathematical notation; each edge carries an ID, type, and optional body; a blueprint is one JSON document.\n- Seven node types in four roles: argument core (claim, evidence, assumption), construction handles (definition, question), review channel (risk), flexibility valve (synthesis). The core adapts Toulmin's claim-data-warrant structure (Toulmin, 2003); the surrounding graph vocabulary draws on issue-based discourse models such as IBIS (Kunz and Rittel, 1970).\n- Five edge types: supports, expands, contradicts, addresses, relates.\n- Type-specific status ladders.\n- Extensibility: per-document override, per-workspace override, built-in default.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_interfaces",
+      "type": "mind",
+      "position": {
+        "x": 2955,
+        "y": 656
+      },
+      "data": {
+        "label": "Prototype: dual interfaces with live sync",
+        "body": "## Evidence\nTwo first-class interfaces over a shared blueprint document:\n- Browser canvas for human users: the blueprint renders as an interactive typed mindmap.\n- CLI for AI agents: commands designed to be issued by an agent; Claude Code and Codex used as primary test agents, each given a small skill description of when and how to use the available commands.\n- Live synchronization: both interfaces read and write the same JSON file; a development server propagates edits within roughly 200 ms, so researcher and agent edit the same artifact in parallel rather than coordinating through a chat window.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_lint",
+      "type": "mind",
+      "position": {
+        "x": 3195,
+        "y": 656
+      },
+      "data": {
+        "label": "Prototype: structural lint rules",
+        "body": "## Evidence\nThe artifact ships with around a dozen structural rules grouped along three axes, all warnings rather than blocks:\n1. Soundness of the support graph: backwards supports edges; supports into a matured claim from an ungrounded source; a supported claim with no incoming supports at all (which makes the claim/assumption distinction operational).\n2. Argument structure: directed cycles in supports; single-supporter synthesis.\n3. Vocabulary integrity: unknown type/status identifiers, empty labels.\nThe reviewer is the arbiter; the lint surfaces what the review should look at.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_dialogue",
+      "type": "mind",
+      "position": {
+        "x": 4120,
+        "y": 656
+      },
+      "data": {
+        "label": "Statuses are contestable author assertions (review as dialogue)",
+        "body": "## Claim\nThe blueprint represents an argument as it is being made, not as it has been proved: statuses are the author's positions - a supported claim is one the author asserts is settled by its support graph. A reviewer challenges that assertion structurally, by attaching a risk node to the claim; the author responds by adding nodes that address the risk, revising the support graph, or moving the claim's status back to stated while the contestation is unresolved. Statuses are revisable; their point is not to certify but to record the author's current position so that dialogue review has somewhere concrete to start. Authoring discipline advances statuses bottom-up, with lint warnings on premature assertion.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_local",
+      "type": "mind",
+      "position": {
+        "x": 4360,
+        "y": 656
+      },
+      "data": {
+        "label": "Recorded structure lets review be local & distributable",
+        "body": "## Claim\nThe intended payoff of the structure is that review can become more local: a reviewer can pick a claim, inspect its supporters, evaluate the evidence bodies and assumption justifications attached to that local subgraph, and form a judgment on that subgraph without first reconstructing the entire argument from prose. Different subgraphs can in principle be reviewed by different reviewers in parallel: an AI critic can enumerate counter-arguments as new risk nodes on one matured-claim subgraph, while an expert verifies the citation behind a single evidence node.\nThe paper identifies this as the property the rebalancing argument ultimately rests on: an artifact that records structure is designed to make verification distributable.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_blueprints",
+      "type": "mind",
+      "position": {
+        "x": 4120,
+        "y": 820
+      },
+      "data": {
+        "label": "C3: blueprints instantiate the desiderata (prototype)",
+        "body": "## Contribution 3\nBlueprints are structured, decomposed research artifacts that complement papers as their verification interface, designed to trade a generation cost of argument decomposition for cheaper downstream verification; the concept is instantiated in a working proof-of-concept prototype.\nConstruction is not free - as in leanblueprint, it requires expert judgment about how to decompose, and good decompositions vary across fields and standards of evidence; see the attached construction-cost risk.\nLifecycle: ideally a blueprint begins before the paper, as a planning artifact of draft claims and open questions, and eventually serves as the structured basis from which the paper is written - the paper becoming a narrative rendering of the matured graph. Initial adoption is expected to be largely retrospective.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_hypothesis",
+      "type": "mind",
+      "position": {
+        "x": 3445,
+        "y": 820
+      },
+      "data": {
+        "label": "Hypothesis: blueprints lower verification cost in practice",
+        "body": "## Empirical hypothesis (deliberately `stated`, not `supported`)\nBlueprints, in practice, lower validity-verification cost across realistic projects, fields, and reviewer populations.\nThe paper itself flags the epistemic status: the claim that recording argument structure upstream can reduce the reconstruction burden paid by downstream verifiers is 'a hypothesis that has yet to be fully tested'. The paper focuses on staking out a position and proposing a preliminary prototype design; whether blueprints specifically deliver is the work that follows.\nKept separate from the in-principle rebalancing claim per the authoring convention: a design intention, an intended payoff, and a demonstrated effect are different things. This node intentionally has no incoming supports.",
+        "typeId": "claim",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_unvalidated",
+      "type": "mind",
+      "position": {
+        "x": 3640,
+        "y": 984
+      },
+      "data": {
+        "label": "Risk: rebalancing payoff empirically unvalidated",
+        "body": "## Risk\nNo study yet shows blueprints lowering validity-verification cost in practice; the proposal's practical value hinges on an untested empirical hypothesis.\n**Status `noted`, not `addressed`:** the paper responds by naming a validation program (see the open question node) but leaves the studies to future work - the risk is qualified, not resolved.",
+        "typeId": "risk",
+        "statusId": "noted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_q_validation",
+      "type": "mind",
+      "position": {
+        "x": 3685,
+        "y": 820
+      },
+      "data": {
+        "label": "Q: do blueprints reduce verification cost?",
+        "body": "## Open question (doubles as the paper's future-work flag)\nDo blueprints, in practice, lower validity-verification cost across realistic projects, fields, and reviewer populations?\nFour natural starting points named by the paper:\n1. Studies of blueprint authoring overhead and verification time on small case-study projects.\n2. Comparison of reviewer agreement and error-detection rates between prose papers and corresponding blueprints.\n3. Validation of vocabulary extensions in disciplines outside the default.\n4. Studies of adoption dynamics - whether blueprint requirements shift costs onto authors without relieving verifiers.",
+        "typeId": "question",
+        "statusId": "open"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_construction",
+      "type": "mind",
+      "position": {
+        "x": 3400,
+        "y": 984
+      },
+      "data": {
+        "label": "Risk: construction cost & decomposition quality",
+        "body": "## Risk\nTwo related exposures the paper itself acknowledges:\n1. **Upfront cost.** Blueprint construction is not free - it requires expert judgment about how to decompose, and good decompositions vary across fields and standards of evidence.\n2. **Poor decompositions.** A graph can be badly factored, with an argument's real difficulty hidden inside one large or opaque node. The synthesis type is the most easily misused: its prose body can hide structure that should have been decomposed, and a blueprint that leans heavily on synthesis may signal that decomposition has not been pushed hard enough. leanblueprint faces the same tension: a poorly decomposed proof can hide all its difficulty inside one large lemma. The paper calls this a genuine limitation: lint flags symptoms but cannot determine whether a decomposition is substantively adequate, and the reviewer remains the arbiter. Semantic checking tools that flag unusually broad or insufficiently verifiable nodes are a possible future mitigation, with final judgment still human.\n**Status `noted`:** the pay-once rebalancing argument answers the cost half (but inherits the unvalidated hypothesis), and lint warns on specific misuse patterns, but whether a decomposition is adequate is left to the author and reviewer.",
+        "typeId": "risk",
+        "statusId": "noted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_program",
+      "type": "mind",
+      "position": {
+        "x": 2170,
+        "y": 1148
+      },
+      "data": {
+        "label": "Engineering of science research program",
+        "body": "## Claim (positioning; kept `stated`)\nThe argument exemplifies a broader principle: scientific artifacts and infrastructure should be designed intentionally and evaluated systematically against criteria such as verification costs, error rates, ease of adoption, and resilience against adversarial or low-effort use. The principle is already implicitly recognized across open science, reproducibility, semantic publishing, and scholarly infrastructure, and related proposals call for AI-era scientific infrastructure and renewed open-science systems (Ghosh, 2025; Pei and Huang, 2025). The cost imbalance introduced by AI makes one design question urgent: which elements of scientific artifacts require redesign now that plausible generation is inexpensive, yet rigorous verification remains resource-intensive?\nKept `stated`: a positioning/outlook claim, not argued to settledness within this paper.",
+        "typeId": "claim",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_harness",
+      "type": "mind",
+      "position": {
+        "x": 3445,
+        "y": 656
+      },
+      "data": {
+        "label": "Blueprints as harnesses for AI-assisted science",
+        "body": "## Claim (forward-looking; kept `stated`)\nBlueprints may matter not only for verification but eventually for generation. Just as test suites make code-generation agents more useful by giving them local targets, structured feedback, and a way to iterate without holding the entire system in context, explicit claims and support relations give an AI agent something to extend, check, and push against: extend a subgraph, propose missing evidence, draft a synthesis node, identify unsupported claims, or generate alternative decompositions. The additions remain provisional and subject to human judgment. In this sense blueprints are a candidate harness for AI-assisted science: they make verification more local now, and may make generation more disciplined later.\nKept `stated`: a speculative extension with no supporting evidence offered in the paper.",
+        "typeId": "claim",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_as_capacity",
+      "type": "mind",
+      "position": {
+        "x": 1190,
+        "y": 560
+      },
+      "data": {
+        "label": "Assumption: filtering capacity aggregates per-artifact checks",
+        "body": "## Assumption\nAn ecosystem's filtering capacity is the aggregate of many per-artifact verification efforts, and it remains sustainable only while the per-artifact verification cost, multiplied by the volume of artifacts, stays within the community's collective capacity.\n**Recorded as an assumption:** stated as a model of how filtering capacity aggregates, not argued from evidence.",
+        "typeId": "assumption",
+        "statusId": "given"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ecosystem",
+      "type": "mind",
+      "position": {
+        "x": 1510,
+        "y": 690
+      },
+      "data": {
+        "label": "The per-artifact cost shift escalates to the ecosystem",
+        "body": "## Claim\nThe shift in cost ratio per artifact also escalates to problems at the ecosystem level: cheap generation raises the volume of plausible artifacts while the cost of verifying each one stays high, so unreliable artifacts can accumulate faster than the system can filter them out.\nBecause the ecosystem's filters are aggregates of per-artifact checks, the artifact is the unit on which they operate - which is where the thesis places its intervention.",
+        "typeId": "claim",
+        "statusId": "supported"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_asym",
+      "type": "mind",
+      "position": {
+        "x": 1870,
+        "y": 656
+      },
+      "data": {
+        "label": "Generation outpaces self-verification in LLMs",
+        "body": "## Evidence\nModels can produce expert-level outputs while failing to understand or critically interrogate those same outputs (West et al., 2024), and LLMs cannot reliably identify errors in their own reasoning without external feedback (Huang et al., 2024).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_argtheory",
+      "type": "mind",
+      "position": {
+        "x": 3635,
+        "y": 164
+      },
+      "data": {
+        "label": "Argumentation theory: prose leaves structure implicit",
+        "body": "## Evidence\nThat prose leaves the structure of an argument implicit is a long-standing observation in argumentation theory and semantic publishing, which have proposed explicit representations of claims, grounds, issues, and their support relations for exactly this reason (Toulmin, 2003; Kunz and Rittel, 1970; Groth et al., 2010; Clark et al., 2014).",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ev_benchmarks",
+      "type": "mind",
+      "position": {
+        "x": 3145,
+        "y": 492
+      },
+      "data": {
+        "label": "Claim-verification benchmarks get harder with scale",
+        "body": "## Evidence\nThe scientific claim-verification literature shows the difficulty at increasing scales. SciFact verifies atomic claims against abstracts; SciFact-Open shows the task becomes substantially harder in an open-domain corpus and when evidence only partially matches a claim's scope (Wadden et al., 2020, 2022). CLAIM-Bench moves the problem into full AI papers, where models must extract claims, locate dispersed evidence, and validate the links between them, exposing precision-recall and computational-cost tradeoffs (Javaji et al., 2025). Execution-grounded evaluation that checks code, data, and execution traces alongside the paper surfaces failures that narrative-only review misses (Bai et al., 2026).\nThe manuscript- and reproduction-level benchmarks (SPOT, REPRO-Bench) are recorded in 'Automated verification benchmarks are weak'.",
+        "typeId": "evidence",
+        "statusId": "cited"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_proposals",
+      "type": "mind",
+      "position": {
+        "x": 3745,
+        "y": 656
+      },
+      "data": {
+        "label": "Research proposals as an early application",
+        "body": "## Claim (forward-looking; kept `stated`)\nResearch proposals may be an especially promising early application. A proposal is an argument about work not yet completed: claims about expected contributions rest on assumptions, preliminary evidence, methodological plans, and open questions, with no completed results to anchor a quick assessment - and grant review shares the per-verifier reconstruction structure of paper review. Question nodes can represent unresolved design decisions, and evidence statuses can distinguish established support from conjecture or planned validation.\nKept `stated`: an outlook claim, not argued to settledness within this paper.",
+        "typeId": "claim",
+        "statusId": "stated"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_notbinding",
+      "type": "mind",
+      "position": {
+        "x": 3025,
+        "y": 612
+      },
+      "data": {
+        "label": "Risk: validity is not the binding constraint",
+        "body": "## Risk (alternative view)\nRebalancing through validity may miss the real burden: novelty and significance judgments also scale with submission volume, and validity can only truly be checked by reproducing the work.\n**Response:** the paper agrees that a validity-focused intervention mitigates rather than resolves the imbalance, and that empirical reproduction needs complementary treatment. Its claim is narrower: argument validity is a significant and currently under-addressed cost. Many documented failure modes of AI-generated manuscripts - hallucinated citations, fabricated papers whose plausible claims lack grounding - are failures of the support relations between claims and evidence rather than of writing style or empirical execution, and they remain hard to catch today.\n**Status `addressed`:** answered by narrowing the claim; the conceded parts are already in C2's scope statement.",
+        "typeId": "risk",
+        "statusId": "addressed"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_altinterventions",
+      "type": "mind",
+      "position": {
+        "x": 2370,
+        "y": 864
+      },
+      "data": {
+        "label": "Risk: other interventions suffice",
+        "body": "## Risk (alternative view)\nThe generation-verification imbalance might be addressed without redesigning scientific artifacts: by improving AI verifiers and reviewers, by expanding human reviewer capacity and incentives, or by introducing better peer-review mechanisms.\n**Response:** the paper treats these as valuable and complementary rather than competing. Better AI alone may not be enough. Interventions on reviewer capacity or incentives alone do not change the underlying cost economics: they add capacity to the expensive side of the ratio without making any artifact cheaper to check. The dependency also runs the other way: ecosystem-level mechanisms one might eventually want - claim-level citation, subgraph-level reviewer assignment, cross-paper contradiction detection - presuppose artifacts that record structure.\n**Status `addressed`.**",
+        "typeId": "risk",
+        "statusId": "addressed"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_expressiveness",
+      "type": "mind",
+      "position": {
+        "x": 4440,
+        "y": 820
+      },
+      "data": {
+        "label": "Risk: graphs lose the expressiveness of prose",
+        "body": "## Risk (technical counterargument)\nGraphs may not capture the semantic richness and nuance of prose.\n**Response:** the design partially mitigates this through Markdown bodies on every node and edge and through synthesis nodes as a flexibility valve. More fundamentally, blueprints complement rather than replace papers, so what the graph does not express deliberately remains in the paper.\n**Status `addressed`.**",
+        "typeId": "risk",
+        "statusId": "addressed"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_gaming",
+      "type": "mind",
+      "position": {
+        "x": 4440,
+        "y": 980
+      },
+      "data": {
+        "label": "Risk: plausible-looking blueprints can be generated too",
+        "body": "## Risk (technical counterargument)\nAn adversary can generate a plausible-looking blueprint just as they can generate plausible prose.\n**Response:** blueprints do not eliminate this risk. Their advantage is narrower: commitments become explicit and locally inspectable, so a reviewer can challenge an individual support relation, identify circular dependencies, or check whether a cited evidence node actually supports the claim its edge asserts. Fabrication is not prevented, but some forms of inconsistency become easier to detect locally.\n**Status `accepted`:** the paper concedes the risk remains and claims only a partial mitigation.",
+        "typeId": "risk",
+        "statusId": "accepted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_plurality",
+      "type": "mind",
+      "position": {
+        "x": 4440,
+        "y": 1140
+      },
+      "data": {
+        "label": "Risk: canonical structure narrows interpretation",
+        "body": "## Risk (systemic)\nAny canonical structured representation risks narrowing how an argument can be interpreted.\n**Response:** the design mitigates but does not eliminate this: a blueprint records the author's asserted argument rather than imposing a field-level ontology, statuses are contestable assertions that reviewers can challenge through risk nodes and status revisions, and vocabularies can be overridden per document. Whether a shared representation privileges one reading over others remains an open problem.\n**Status `noted`:** mitigated, explicitly left open.",
+        "typeId": "risk",
+        "statusId": "noted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_partialshift",
+      "type": "mind",
+      "position": {
+        "x": 2555,
+        "y": 940
+      },
+      "data": {
+        "label": "Risk: costs shift to authors without relieving verifiers",
+        "body": "## Risk (systemic)\nIf blueprints shift only part of the verification cost, venues might raise expectations for authors without meaningfully reducing verifier burden, and the community could fragment into blueprint- and prose-centered cultures with additional coordination costs.\n**Response:** these are adoption-dynamics questions that cannot be resolved from the artifact design alone; the paper puts them on its empirical agenda.\n**Status `noted`.**",
+        "typeId": "risk",
+        "statusId": "noted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_risk_scope",
+      "type": "mind",
+      "position": {
+        "x": 2370,
+        "y": 1104
+      },
+      "data": {
+        "label": "Risk: disciplinary scope",
+        "body": "## Risk (scope)\nThe vocabulary is most directly applicable to research whose central contributions can be organized around claims, evidence, assumptions, and support relations. Interpretive, ethnographic, and other research traditions may fit this representation poorly, and the extensible vocabulary is a hypothesis about adaptability, not evidence that the framework generalizes across disciplines.\n**Response:** the paper states this as an explicit scope condition rather than treating science as a monolithic enterprise: the position concerns the artifact forms of claim-and-evidence-structured research, and its applicability beyond them remains to be established.\n**Status `accepted`:** conceded as a scope condition on the thesis.",
+        "typeId": "risk",
+        "statusId": "accepted"
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_arxiv_pollution",
+      "source": "n_ev_arxiv",
+      "target": "n_pollution",
+      "data": {
+        "typeId": "supports",
+        "body": "A mainstream venue changed its moderation policy specifically because AI-generated artifacts were accumulating - a concrete institutional manifestation of pollution inside a preprint repository. The writing-change analyses show the scale of the stream the policy responds to; they measure LLM involvement rather than unreliability, so they corroborate rather than establish pollution."
+      }
+    },
+    {
+      "id": "e_reviews_pollution",
+      "source": "n_ev_reviews",
+      "target": "n_pollution",
+      "data": {
+        "typeId": "supports",
+        "body": "Shows pollution of the peer-review record itself: 21% AI-generated reviews is contamination inside the verification channel, not just the submission stream, with a prospective AI-reviews-AI feedback loop."
+      }
+    },
+    {
+      "id": "e_fabricated_pollution",
+      "source": "n_ev_fabricated",
+      "target": "n_pollution",
+      "data": {
+        "typeId": "supports",
+        "body": "Direct instances of plausible-but-unreliable artifacts entering knowledge systems: fabricated papers indexed by Google Scholar and hallucinated citations propagating through the literature."
+      }
+    },
+    {
+      "id": "e_adjacent_pollution",
+      "source": "n_ev_adjacent",
+      "target": "n_pollution",
+      "data": {
+        "typeId": "supports",
+        "body": "Corroborating *adjacent* pressure rather than a direct polluted-artifact case: lagging journal AI-use policies, paper mills scaling with generative AI, and corrupted authorship metadata show the surrounding integrity infrastructure straining under the same forces."
+      }
+    },
+    {
+      "id": "e_gencost_gencheap",
+      "source": "n_ev_gencost",
+      "target": "n_gencheap",
+      "data": {
+        "typeId": "supports",
+        "body": "Direct citations of low-cost AI generation across exactly the artifact types the claim ranges over - papers, reviews, hypotheses, code, surveys."
+      }
+    },
+    {
+      "id": "e_aisci_gencheap",
+      "source": "n_ev_aisci",
+      "target": "n_gencheap",
+      "data": {
+        "typeId": "supports",
+        "body": "Upper bound on generation capability: an autonomous system produced a manuscript exceeding a workshop's average human acceptance threshold - plausible-artifact generation is not merely cheap but strong enough to pass real filters."
+      }
+    },
+    {
+      "id": "e_verifweak_vercost",
+      "source": "n_ev_verifweak",
+      "target": "n_vercost",
+      "data": {
+        "typeId": "supports",
+        "body": "The natural defensive response - automated verification - is measured and found weak: error-detection recall far below what meaningful filtering would need (Son et al., 2025), with similar reproducibility-assessment gaps (Hu et al., 2025); so verification cost has not fallen the way generation cost has."
+      }
+    },
+    {
+      "id": "e_histfilter_costshift",
+      "source": "n_as_histfilter",
+      "target": "n_syn_costshift",
+      "data": {
+        "typeId": "supports",
+        "body": "Premise 1 of the joint argument: the existing filters depended on the cost differential - generation cost was the implicit parameter their discriminating power rested on."
+      }
+    },
+    {
+      "id": "e_gencheap_costshift",
+      "source": "n_gencheap",
+      "target": "n_syn_costshift",
+      "data": {
+        "typeId": "supports",
+        "body": "Premise 2 of the joint argument: the generation side of the cost ratio has collapsed."
+      }
+    },
+    {
+      "id": "e_vercost_costshift",
+      "source": "n_vercost",
+      "target": "n_syn_costshift",
+      "data": {
+        "typeId": "supports",
+        "body": "Premise 3 of the joint argument: the verification side of the cost ratio has not moved comparably."
+      }
+    },
+    {
+      "id": "e_costshift_imbalance",
+      "source": "n_syn_costshift",
+      "target": "n_imbalance",
+      "data": {
+        "typeId": "supports",
+        "body": "The joint cost-ratio argument delivers the diagnosis: the filters lose their discriminating power for cost-structure reasons, so they can no longer screen plausible but unreliable artifacts at the rate those artifacts arrive - the conditions for pollution. Infrastructural rather than behavioral."
+      }
+    },
+    {
+      "id": "e_pollution_imbalance",
+      "source": "n_pollution",
+      "target": "n_imbalance",
+      "data": {
+        "typeId": "supports",
+        "body": "Corroboration: observed pollution - plausible, low-cost, not-strictly-fraudulent artifacts passing existing filters - shows the conditions are already being exploited. It is consistent with the cost-ratio account but does not by itself establish the imbalance as the sole cause."
+      }
+    },
+    {
+      "id": "e_exploit_noai",
+      "source": "n_as_exploit",
+      "target": "n_noai",
+      "data": {
+        "typeId": "supports",
+        "body": "Reason 1 (structural, not capability-bound): even highly reliable frontier systems leave the infrastructure exploitable by anyone using less reliable ones; as long as plausibility is cheap, verification still bears the load and improvements in the best generators do little to relieve it."
+      }
+    },
+    {
+      "id": "e_parallel_noai",
+      "source": "n_as_parallel",
+      "target": "n_noai",
+      "data": {
+        "typeId": "supports",
+        "body": "Reason 2 (asymmetric scaling): capability gains scale generation and verification differently - generation multiplies per actor at marginal cost, verification is applied per artifact - so the cost gap persists even under optimistic verifier assumptions."
+      }
+    },
+    {
+      "id": "e_social_noveltysig",
+      "source": "n_as_social",
+      "target": "n_noveltysig",
+      "data": {
+        "typeId": "supports",
+        "body": "If novelty/significance judgments rest on field-external context and can often be formed initially from surface inspection, then restructuring the artifact changes only how clearly the result is communicated - not the judgments themselves."
+      }
+    },
+    {
+      "id": "e_tracing_validitylabor",
+      "source": "n_as_tracing",
+      "target": "n_validitylabor",
+      "data": {
+        "typeId": "supports",
+        "body": "Validity's cost profile follows directly from what judging it requires: tracing extended chains of reasoning through evidence, methods, and assumptions, rather than skimming a surface."
+      }
+    },
+    {
+      "id": "e_components_validitylabor",
+      "source": "n_as_components",
+      "target": "n_validitylabor",
+      "data": {
+        "typeId": "supports",
+        "body": "The paper argues that validity checking runs through nearly every component of this decomposition of verification work - the decomposition supplies the components across which validity checking is shown to spread, contrasted with the surface-judgeable dimensions."
+      }
+    },
+    {
+      "id": "e_noveltysig_bottleneck",
+      "source": "n_noveltysig",
+      "target": "n_validity_bottleneck",
+      "data": {
+        "typeId": "supports",
+        "body": "Eliminates the alternatives: artifact design has limited leverage on novelty and significance, so whatever leverage artifact design has must concentrate on the remaining dimension."
+      }
+    },
+    {
+      "id": "e_validitylabor_bottleneck",
+      "source": "n_validitylabor",
+      "target": "n_validity_bottleneck",
+      "data": {
+        "typeId": "supports",
+        "body": "Supplies the cost half of the concentration claim: validity is often especially labor-intensive to verify."
+      }
+    },
+    {
+      "id": "e_structure_bottleneck",
+      "source": "n_as_structure",
+      "target": "n_validity_bottleneck",
+      "data": {
+        "typeId": "supports",
+        "body": "Supplies the leverage half: if a claim's validity is a property of argument structure and the artifact is what records that structure, then validity is the dimension whose verification cost depends most directly on how the artifact is internally organized."
+      }
+    },
+    {
+      "id": "e_authorgraph_compress",
+      "source": "n_as_authorgraph",
+      "target": "n_compress",
+      "data": {
+        "typeId": "supports",
+        "body": "The compression framing requires something to compress: writing can only discard graph structure if an argument graph existed in the author's head to begin with. The paper's discard list then enumerates what is lost."
+      }
+    },
+    {
+      "id": "e_compress_reconstruct",
+      "source": "n_compress",
+      "target": "n_reconstruct",
+      "data": {
+        "typeId": "supports",
+        "body": "What compression discarded is exactly what the verifying reviewer must rebuild - the reconstruction steps mirror the discard list (implicit assumptions, unrecorded dependencies, unpropagated limitations) item by item."
+      }
+    },
+    {
+      "id": "e_components_reconstruct",
+      "source": "n_as_components",
+      "target": "n_reconstruct",
+      "data": {
+        "typeId": "supports",
+        "body": "The verification components map onto the reconstruction steps (identify claims, locate evidence, infer assumptions, check support relations, track qualifications) - showing that verification-in-prose just *is* reconstruction of unrecorded structure."
+      }
+    },
+    {
+      "id": "e_reconstruct_prose",
+      "source": "n_reconstruct",
+      "target": "n_prose",
+      "data": {
+        "typeId": "supports",
+        "body": "The reconstruction burden is the mechanism that makes validity expensive specifically under the prose form: the cost is reverse-engineering structure the artifact did not record, not evaluating the science itself."
+      }
+    },
+    {
+      "id": "e_perverifier_prose",
+      "source": "n_as_perverifier",
+      "target": "n_prose",
+      "data": {
+        "typeId": "supports",
+        "body": "The per-verifier premise scales the burden: the author paid the structure cost once (or, increasingly, skipped it entirely), but every downstream verifier pays reconstruction again - making the artifact form, not any single reading, the cost driver."
+      }
+    },
+    {
+      "id": "e_compress_aihard",
+      "source": "n_compress",
+      "target": "n_aihard",
+      "data": {
+        "typeId": "supports",
+        "body": "The linearization removes precisely the local structure an AI system could otherwise check piece by piece - prose constrains AI verifiers for the same structural reason it burdens human ones."
+      }
+    },
+    {
+      "id": "e_verifweak_aihard",
+      "source": "n_ev_verifweak",
+      "target": "n_aihard",
+      "data": {
+        "typeId": "supports",
+        "body": "At the manuscript and reproducibility levels, benchmarks report low precision, recall, and accuracy for current models at detecting significant errors and at comparing a paper with its reproduction package (Son et al., 2025; Hu et al., 2025)."
+      }
+    },
+    {
+      "id": "e_bottleneck_desiderata",
+      "source": "n_validity_bottleneck",
+      "target": "n_desiderata",
+      "data": {
+        "typeId": "supports",
+        "body": "Locates the lever: since verification cost concentrates in validity and validity is where artifact design has the most direct leverage, the design remedy targets recording the argument structure that validity depends on."
+      }
+    },
+    {
+      "id": "e_prose_desiderata",
+      "source": "n_prose",
+      "target": "n_desiderata",
+      "data": {
+        "typeId": "supports",
+        "body": "Names the defect the desiderata negate: if prose-first serialization is what makes validity expensive, the corresponding remedy is structured-rather-than-prose-first and decomposed-rather-than-monolithic."
+      }
+    },
+    {
+      "id": "e_desiderata_redistribute",
+      "source": "n_desiderata",
+      "target": "n_redistribute",
+      "data": {
+        "typeId": "supports",
+        "body": "'Together, these two desiderata are designed to redistribute the structure work from many downstream verifiers to one upstream author' - the redistribution claim is the payoff of the two desiderata taken jointly."
+      }
+    },
+    {
+      "id": "e_perverifier_redistribute",
+      "source": "n_as_perverifier",
+      "target": "n_redistribute",
+      "data": {
+        "typeId": "supports",
+        "body": "The asymmetry that makes redistribution a net win: one upfront author cost versus a saving repeated across every downstream verifier - the compounding the per-verifier premise identifies, run in reverse."
+      }
+    },
+    {
+      "id": "e_local_redistribute",
+      "source": "n_local",
+      "target": "n_redistribute",
+      "data": {
+        "typeId": "supports",
+        "body": "The paper states that the rebalancing argument ultimately rests on this property: an artifact that records structure is designed to make verification distributable - locality is the mechanism through which the redistribution would be realized."
+      }
+    },
+    {
+      "id": "e_leanbp_precedent",
+      "source": "n_ev_leanbp",
+      "target": "n_precedent",
+      "data": {
+        "typeId": "supports",
+        "body": "The PFR formalization is the demonstrated case: a typed dependency graph with per-node statuses coordinated distributed verification work among many contributors, including non-experts who never held the full proof in mind."
+      }
+    },
+    {
+      "id": "e_nokernel_adapt",
+      "source": "n_as_nokernel",
+      "target": "n_adapt",
+      "data": {
+        "typeId": "supports",
+        "body": "Why transplant fails and adaptation is forced: without a machine-checkable proof obligation, a binary proved flag has no referent in general research, so statuses, vocabularies, and enforcement must all be reworked."
+      }
+    },
+    {
+      "id": "e_datamodel_adapt",
+      "source": "n_ev_datamodel",
+      "target": "n_adapt",
+      "data": {
+        "typeId": "supports",
+        "body": "The prototype shows the adaptation concretely realized: lifecycle status ladders instead of a binary flag, and a three-layer extensible vocabulary for field variation."
+      }
+    },
+    {
+      "id": "e_nokernel_dialogue",
+      "source": "n_as_nokernel",
+      "target": "n_dialogue",
+      "data": {
+        "typeId": "supports",
+        "body": "Because no kernel arbitrates, settledness must be somebody's assertion; making statuses author assertions - structurally tracked but contestable - is the design response to that gap ('the artifact has to make explicit that statuses are author assertions')."
+      }
+    },
+    {
+      "id": "e_datamodel_dialogue",
+      "source": "n_ev_datamodel",
+      "target": "n_dialogue",
+      "data": {
+        "typeId": "supports",
+        "body": "The vocabulary supplies the dialogue's moves: risk nodes for challenges, addresses edges for responses, revisable status ladders for concession or reassertion."
+      }
+    },
+    {
+      "id": "e_precedent_local",
+      "source": "n_precedent",
+      "target": "n_local",
+      "data": {
+        "typeId": "supports",
+        "body": "leanblueprint demonstrates the locality payoff is achievable in at least one domain: distributed contributors verifying small, locally specified nodes in parallel, with global status a function of per-node statuses."
+      }
+    },
+    {
+      "id": "e_datamodel_local",
+      "source": "n_ev_datamodel",
+      "target": "n_local",
+      "data": {
+        "typeId": "supports",
+        "body": "Locality is a structural property of the recorded graph: claims and their supporters exist as addressable local subgraphs that a reviewer, expert, or AI critic can be handed in isolation."
+      }
+    },
+    {
+      "id": "e_datamodel_blueprints",
+      "source": "n_ev_datamodel",
+      "target": "n_blueprints",
+      "data": {
+        "typeId": "supports",
+        "body": "The typed, decomposed graph data model is the 'structured rather than prose-first' and 'decomposed rather than monolithic' desiderata made concrete."
+      }
+    },
+    {
+      "id": "e_interfaces_blueprints",
+      "source": "n_ev_interfaces",
+      "target": "n_blueprints",
+      "data": {
+        "typeId": "supports",
+        "body": "Shows the instantiation is working software, not paper design: dual first-class interfaces with live synchronization demonstrate the artifact is buildable and editable by both humans and AI agents today."
+      }
+    },
+    {
+      "id": "e_lint_blueprints",
+      "source": "n_ev_lint",
+      "target": "n_blueprints",
+      "data": {
+        "typeId": "supports",
+        "body": "The lint is the structural tooling that substitutes for Lean's kernel in the adapted setting: soft structural guarantees appropriate to non-binary verification - the structural tools the proposal promises alongside statuses."
+      }
+    },
+    {
+      "id": "e_adapt_blueprints",
+      "source": "n_adapt",
+      "target": "n_blueprints",
+      "data": {
+        "typeId": "supports",
+        "body": "The instantiation claim requires that the leanblueprint spirit survives leaving formal mathematics; the adaptation argument (lifecycle statuses, extensible vocabulary, soft lint) supplies that bridge."
+      }
+    },
+    {
+      "id": "e_dialogue_blueprints",
+      "source": "n_dialogue",
+      "target": "n_blueprints",
+      "data": {
+        "typeId": "supports",
+        "body": "The dialogue semantics are what make the adapted statuses meaningful as a verification interface - without contestable author assertions, lifecycle statuses would be decoration."
+      }
+    },
+    {
+      "id": "e_imbalance_thesis",
+      "source": "n_imbalance",
+      "target": "n_thesis",
+      "data": {
+        "typeId": "supports",
+        "body": "The problem premise: there is a real, infrastructural cost imbalance creating conditions for pollution - so rebalancing generation and verification costs is what an epistemic-infrastructure redesign must aim at."
+      }
+    },
+    {
+      "id": "e_noai_thesis",
+      "source": "n_noai",
+      "target": "n_thesis",
+      "data": {
+        "typeId": "supports",
+        "body": "The necessity premise: the imbalance will not resolve through capability improvements alone, so infrastructure redesign - rather than waiting for better AI - is required ('a structural imbalance that better AI alone cannot resolve')."
+      }
+    },
+    {
+      "id": "e_redistribute_thesis",
+      "source": "n_redistribute",
+      "target": "n_thesis",
+      "data": {
+        "typeId": "supports",
+        "body": "The possibility premise: rebalancing is achievable at the artifact level - recording structure upstream shifts cost off every downstream verifier."
+      }
+    },
+    {
+      "id": "e_blueprints_thesis",
+      "source": "n_blueprints",
+      "target": "n_thesis",
+      "data": {
+        "typeId": "supports",
+        "body": "The feasibility premise: a concrete instantiation of the redesign exists as a working prototype, so the proposed rebalancing is actionable rather than merely aspirational."
+      }
+    },
+    {
+      "id": "e_thesis_definfra",
+      "source": "n_thesis",
+      "target": "n_def_infra",
+      "data": {
+        "typeId": "expands",
+        "body": "Pins the term the thesis quantifies over."
+      }
+    },
+    {
+      "id": "e_pollution_defpollution",
+      "source": "n_pollution",
+      "target": "n_def_pollution",
+      "data": {
+        "typeId": "expands",
+        "body": "Pins the phenomenon term the diagnosis argument uses throughout."
+      }
+    },
+    {
+      "id": "e_bottleneck_defvalidity",
+      "source": "n_validity_bottleneck",
+      "target": "n_def_validity",
+      "data": {
+        "typeId": "expands",
+        "body": "Pins the three review dimensions the concentration claim discriminates among."
+      }
+    },
+    {
+      "id": "e_blueprints_defblueprint",
+      "source": "n_blueprints",
+      "target": "n_def_blueprint",
+      "data": {
+        "typeId": "expands",
+        "body": "Pins the proposal term."
+      }
+    },
+    {
+      "id": "e_hypothesis_riskunvalidated",
+      "source": "n_hypothesis",
+      "target": "n_risk_unvalidated",
+      "data": {
+        "typeId": "relates",
+        "body": "The risk qualifies the hypothesis: the paper's own flag that the practical payoff is 'a hypothesis that has yet to be fully tested'."
+      }
+    },
+    {
+      "id": "e_blueprints_riskconstruction",
+      "source": "n_blueprints",
+      "target": "n_risk_construction",
+      "data": {
+        "typeId": "relates",
+        "body": "The paper's acknowledged cost of its own proposal: construction requires expert judgment and can be done badly - synthesis-heavy blueprints may hide structure."
+      }
+    },
+    {
+      "id": "e_thesis_program",
+      "source": "n_thesis",
+      "target": "n_program",
+      "data": {
+        "typeId": "relates",
+        "body": "The thesis is one instance of the broader engineering-of-science commitment; the paper situates itself inside that research program."
+      }
+    },
+    {
+      "id": "e_aihard_harness",
+      "source": "n_aihard",
+      "target": "n_harness",
+      "data": {
+        "typeId": "relates",
+        "body": "Same mechanism, opposite sign: the explicit local structure whose absence constrains AI verifiers of prose is what would give a generating agent local targets and structured feedback."
+      }
+    },
+    {
+      "id": "e_qvalidation_riskunvalidated",
+      "source": "n_q_validation",
+      "target": "n_risk_unvalidated",
+      "data": {
+        "typeId": "addresses",
+        "body": "The paper responds to the unvalidated-payoff risk by naming a concrete validation program (four study designs) - a response, not a resolution: the studies are left to future work, so the risk stays noted and the question stays open."
+      }
+    },
+    {
+      "id": "e_redistribute_riskconstruction",
+      "source": "n_redistribute",
+      "target": "n_risk_construction",
+      "data": {
+        "typeId": "addresses",
+        "body": "Answers the cost half of the risk: the upfront construction cost is paid once by the author with the aim of cheaper, more local, more distributed verification downstream - the rebalancing the proposal seeks. The answer inherits the unvalidated empirical hypothesis, so the risk stays noted."
+      }
+    },
+    {
+      "id": "e_lint_riskconstruction",
+      "source": "n_ev_lint",
+      "target": "n_risk_construction",
+      "data": {
+        "typeId": "addresses",
+        "body": "Mitigates the decomposition half of the risk: lint flags symptoms and specific misuse patterns (matured claims without grounded support, empty or single-supporter synthesis), though whether a decomposition is substantively adequate is left to the author and reviewer."
+      }
+    },
+    {
+      "id": "e_imbalance_ecosystem",
+      "source": "n_imbalance",
+      "target": "n_ecosystem",
+      "data": {
+        "typeId": "supports",
+        "body": "The per-artifact premise: generating a plausible artifact has become cheap relative to verifying it, which raises the volume reaching the filters without lowering the cost of checking each artifact."
+      }
+    },
+    {
+      "id": "e_capacity_ecosystem",
+      "source": "n_as_capacity",
+      "target": "n_ecosystem",
+      "data": {
+        "typeId": "supports",
+        "body": "The aggregation premise: the ecosystem's filter holds only while per-artifact verification cost times volume stays within collective capacity. With volume rising and per-artifact cost unchanged, the product outgrows capacity."
+      }
+    },
+    {
+      "id": "e_ecosystem_thesis",
+      "source": "n_ecosystem",
+      "target": "n_thesis",
+      "data": {
+        "typeId": "supports",
+        "body": "Places the intervention: since the ecosystem's filters are aggregates of per-artifact checks, rebalancing has to act on the artifact - 'an intervention at the level of the artifact, the unit on which the ecosystem's filters operate'."
+      }
+    },
+    {
+      "id": "e_asym_noai",
+      "source": "n_ev_asym",
+      "target": "n_noai",
+      "data": {
+        "typeId": "supports",
+        "body": "Makes the capability side of reason 2 empirical: improvements in generation capability do not automatically produce commensurate improvements in verification capability, so better generators do not bring better checking with them."
+      }
+    },
+    {
+      "id": "e_argtheory_compress",
+      "source": "n_ev_argtheory",
+      "target": "n_compress",
+      "data": {
+        "typeId": "supports",
+        "body": "Independent precedent for the compression claim: whole research traditions propose explicit argument representations because prose does not record claims, grounds, and support relations."
+      }
+    },
+    {
+      "id": "e_benchmarks_aihard",
+      "source": "n_ev_benchmarks",
+      "target": "n_aihard",
+      "data": {
+        "typeId": "supports",
+        "body": "Taken together, these benchmarks suggest the bottleneck is not only model capability: it is the need to reconstruct from prose the claim-evidence and paper-code relations that the artifact did not make explicit. Difficulty grows as the evidence a claim depends on becomes more dispersed."
+      }
+    },
+    {
+      "id": "e_blueprints_proposals",
+      "source": "n_blueprints",
+      "target": "n_proposals",
+      "data": {
+        "typeId": "relates",
+        "body": "An application beyond papers: the verification-interface argument carries over to any artifact whose review requires reconstructing an argument."
+      }
+    },
+    {
+      "id": "e_bottleneck_risknotbinding",
+      "source": "n_validity_bottleneck",
+      "target": "n_risk_notbinding",
+      "data": {
+        "typeId": "relates",
+        "body": "The objection targets the concentration claim: if the binding constraint lies elsewhere, intervening on validity misplaces effort."
+      }
+    },
+    {
+      "id": "e_fabricated_risknotbinding",
+      "source": "n_ev_fabricated",
+      "target": "n_risk_notbinding",
+      "data": {
+        "typeId": "addresses",
+        "body": "Hallucinated citations and fabricated papers are failures of claim-evidence support relations - exactly the dimension the narrowed claim targets."
+      }
+    },
+    {
+      "id": "e_verifweak_risknotbinding",
+      "source": "n_ev_verifweak",
+      "target": "n_risk_notbinding",
+      "data": {
+        "typeId": "addresses",
+        "body": "These failures remain hard to catch today: manuscript-level error detection still has low recall, so the validity cost is real and under-addressed."
+      }
+    },
+    {
+      "id": "e_thesis_riskaltinterventions",
+      "source": "n_thesis",
+      "target": "n_risk_altinterventions",
+      "data": {
+        "typeId": "relates",
+        "body": "The objection targets the thesis's choice of intervention: artifact-level redesign rather than better verifiers, more reviewer capacity, or new review mechanisms."
+      }
+    },
+    {
+      "id": "e_noai_riskaltinterventions",
+      "source": "n_noai",
+      "target": "n_risk_altinterventions",
+      "data": {
+        "typeId": "addresses",
+        "body": "Answers the better-AI half of the objection: capability gains alone leave the infrastructure exploitable and the two costs on different scaling curves."
+      }
+    },
+    {
+      "id": "e_blueprints_riskexpressiveness",
+      "source": "n_blueprints",
+      "target": "n_risk_expressiveness",
+      "data": {
+        "typeId": "relates",
+        "body": "A counterargument to the proposed artifact form itself."
+      }
+    },
+    {
+      "id": "e_datamodel_riskexpressiveness",
+      "source": "n_ev_datamodel",
+      "target": "n_risk_expressiveness",
+      "data": {
+        "typeId": "addresses",
+        "body": "Markdown bodies on every node and edge, and the synthesis valve, let the graph carry nuance a bare edge cannot; what remains inexpressible stays in the paper, which blueprints complement rather than replace."
+      }
+    },
+    {
+      "id": "e_blueprints_riskgaming",
+      "source": "n_blueprints",
+      "target": "n_risk_gaming",
+      "data": {
+        "typeId": "relates",
+        "body": "A counterargument to the proposed artifact form: structure can be faked as cheaply as prose."
+      }
+    },
+    {
+      "id": "e_local_riskgaming",
+      "source": "n_local",
+      "target": "n_risk_gaming",
+      "data": {
+        "typeId": "addresses",
+        "body": "Local inspectability is the partial mitigation: explicit commitments can be challenged one support relation at a time, so some inconsistencies surface locally even when fabrication is not prevented."
+      }
+    },
+    {
+      "id": "e_blueprints_riskplurality",
+      "source": "n_blueprints",
+      "target": "n_risk_plurality",
+      "data": {
+        "typeId": "relates",
+        "body": "A systemic risk of adopting any shared structured representation of arguments."
+      }
+    },
+    {
+      "id": "e_dialogue_riskplurality",
+      "source": "n_dialogue",
+      "target": "n_risk_plurality",
+      "data": {
+        "typeId": "addresses",
+        "body": "Statuses are contestable author assertions, so a reviewer who reads the argument differently can say so in place, through a risk node and a status revision."
+      }
+    },
+    {
+      "id": "e_redistribute_riskpartialshift",
+      "source": "n_redistribute",
+      "target": "n_risk_partialshift",
+      "data": {
+        "typeId": "relates",
+        "body": "The risk targets the redistribution claim: redistribution could be partial, adding author cost without the downstream saving."
+      }
+    },
+    {
+      "id": "e_qvalidation_riskpartialshift",
+      "source": "n_q_validation",
+      "target": "n_risk_partialshift",
+      "data": {
+        "typeId": "addresses",
+        "body": "Starting point 4 - studies of adoption dynamics - is the paper's response: a research question, not a resolution."
+      }
+    },
+    {
+      "id": "e_thesis_riskscope",
+      "source": "n_thesis",
+      "target": "n_risk_scope",
+      "data": {
+        "typeId": "relates",
+        "body": "Scopes the thesis to claim-and-evidence-structured research."
+      }
+    },
+    {
+      "id": "e_qvalidation_riskscope",
+      "source": "n_q_validation",
+      "target": "n_risk_scope",
+      "data": {
+        "typeId": "addresses",
+        "body": "Starting point 3 - validating vocabulary extensions in disciplines outside the default - is how the scope could be widened."
+      }
+    }
+  ],
+  "notes": "Blueprint of the position paper 'Epistemic Infrastructures of Science in AI Era Should Rebalance Costs of Generation and Verification' (NeurIPS 2026, Position Paper Track), synced to the camera-ready version. Citations are author-year and refer to the paper's bibliography. Figure 1 of the paper shows a fragment of this blueprint around 'Joint: cost-ratio shift strips filters of power'; those nodes keep the labels as printed.",
+  "ui": {
+    "selection": {
+      "nodeIds": [],
+      "edgeIds": []
+    },
+    "viewport": {
+      "x": -760.920886783008,
+      "y": 2.24337728449224,
+      "zoom": 0.5
+    },
+    "collapsed": []
+  }
+}
