@@ -2,7 +2,22 @@
 
 Blueprint is a tool for building **blueprints** — typed argument graphs — of research projects, with first-class interfaces for both humans and AI agents. The browser canvas (rendered as a mindmap) and the bundled CLI read and write the same JSON document; edits round-trip live, so a researcher and their coding agent (Claude Code, Codex, …) can think on the same artifact in parallel.
 
-This tool is part of the **Engineering of Science** project, which aims to redesign the infrastructure of doing science in the era of AI.
+The argument behind it is made in the position paper *Epistemic Infrastructures of Science in AI Era Should Rebalance Costs of Generation and Verification* (NeurIPS 2026, Position Paper Track; an earlier version is on [arXiv:2605.10425](https://arxiv.org/abs/2605.10425)).
+
+## Contents
+
+- [What is a blueprint?](#what-is-a-blueprint)
+- [Design principles](#design-principles)
+- [Architecture](#architecture)
+- [Run it](#run-it)
+- [Use it (the canvas)](#use-it-the-canvas)
+- [Pair editing with a coding agent](#pair-editing-with-a-coding-agent)
+  - [Customizing types and statuses](#customizing-types-and-statuses)
+  - [Lint](#lint)
+- [Configuring the workspace](#configuring-the-workspace)
+- [Build](#build)
+- [Project layout](#project-layout)
+- [Citation](#citation)
 
 ## What is a blueprint?
 
@@ -227,6 +242,21 @@ bin/blueprint.ts          CLI entry point (`npm run blueprint -- ...`)
 blueprints/               Workspace documents (per-machine, gitignored).
                         Includes blueprint.types.toml — the optional workspace
                         registry override.
+examples/                 Example blueprints (tracked). position-paper.json is
+                        the blueprint of the NeurIPS 2026 position paper.
 .claude/skills/blueprint/ Claude Code skill that wraps the CLI
 .codex/skills/blueprint/  Codex skill that wraps the CLI
+```
+
+## Citation
+
+If you use Blueprint or build on the position paper, please cite:
+
+```bibtex
+@inproceedings{ma2026epistemic,
+  title     = {Epistemic Infrastructures of Science in {AI} Era Should Rebalance Costs of Generation and Verification},
+  author    = {Ma, Jiaqi W.},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Position Paper Track},
+  year      = {2026}
+}
 ```
