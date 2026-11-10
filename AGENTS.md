@@ -90,6 +90,8 @@ npm run blueprint -- setstatus <doc> <ref> --status <statusId>
 npm run blueprint -- body <doc> <ref> [--set <text> | --append <text> | --file <path> | --stdin]
 npm run blueprint -- setedgetype <doc> <src> <tgt> --type <typeId>
 npm run blueprint -- edgebody <doc> <src> <tgt> [--set/--append/--file/--stdin]
+npm run blueprint -- paperref <doc> <ref> [--add <loc> [--note <t>] | --remove <n> | --clear]
+npm run blueprint -- edgepaperref <doc> <src> <tgt> [--add/--remove/--clear]  # links into the prose paper
 npm run blueprint -- registry <doc>                        # effective registry
 npm run blueprint -- registry --workspace                  # workspace registry
 npm run blueprint -- registry --init [--force]             # write default to <workspace>/blueprint.types.toml

@@ -7,7 +7,11 @@ import {
   CliError,
   DOCUMENTS_DIR,
   addChild,
+  addEdgePaperRef,
+  addPaperRef,
   addSibling,
+  clearEdgePaperRefs,
+  clearPaperRefs,
   defaultRegistry,
   deleteNode,
   effectiveRegistry,
@@ -19,6 +23,8 @@ import {
   move,
   normalizeGraphFile,
   outline,
+  removeEdgePaperRef,
+  removePaperRef,
   rename,
   resolveDocumentPath,
   seedGraphFile,
@@ -43,7 +49,7 @@ import {
   isWorkspaceToolFile,
   workspaceRegistryPath,
 } from "../src/server/workspace.js";
-import type { GraphFile, Registry } from "../src/types.js";
+import type { GraphFile, PaperRef, Registry } from "../src/types.js";
 
 const REPO_ROOT = process.cwd();
 const WORKSPACE_DIR = getWorkspaceDir(REPO_ROOT);
@@ -132,6 +138,57 @@ function shortId(id: string, label: string): string {
   return `${id}  "${label}"`;
 }
 
+type PaperRefChange =
+  | { kind: "add"; loc: string; note?: string }
+  | { kind: "remove"; index: number }
+  | { kind: "clear" };
+
+// Shared flag parsing for `paperref` / `edgepaperref`. Returns null in
+// read (print) mode.
+function paperRefMode(flags: Flags): PaperRefChange | null {
+  const addLoc = flagString(flags, "add");
+  const removeIndex = flagString(flags, "remove");
+  const clear = flags.clear === true;
+  const picked = [addLoc, removeIndex, clear ? "" : undefined].filter(
+    (v) => v !== undefined,
+  );
+  if (picked.length > 1) {
+    throw new CliError("use only one of --add / --remove / --clear");
+  }
+  const note = flagString(flags, "note");
+  if (note !== undefined && addLoc === undefined) {
+    throw new CliError("--note requires --add");
+  }
+  if (addLoc !== undefined) return { kind: "add", loc: addLoc, note };
+  if (removeIndex !== undefined) {
+    const index = Number(removeIndex);
+    if (!Number.isInteger(index)) {
+      throw new CliError(
+        `--remove expects an index number, got "${removeIndex}"`,
+      );
+    }
+    return { kind: "remove", index };
+  }
+  if (clear) return { kind: "clear" };
+  return null;
+}
+
+function printPaperRefs(refs: PaperRef[] | undefined): void {
+  if (!refs || refs.length === 0) {
+    console.log("(no paper refs)");
+    return;
+  }
+  refs.forEach((r, i) => {
+    console.log(`${i + 1}. ${r.loc}${r.note ? ` — ${r.note}` : ""}`);
+  });
+}
+
+function describePaperRefChange(mode: PaperRefChange, what: string): string {
+  if (mode.kind === "add") return `added paper ref to ${what}: ${mode.loc}`;
+  if (mode.kind === "remove") return `removed paper ref ${mode.index} from ${what}`;
+  return `cleared paper refs on ${what}`;
+}
+
 const TOP_HELP = `blueprint — manipulate workspace blueprint documents (rendered as mindmaps in the browser)
 
 Usage:
@@ -191,6 +248,16 @@ Bodies (Markdown + KaTeX, rendered in the Inspector):
   body <doc> <ref> --file <path>             Replace node body from a file
   body <doc> <ref> --stdin                   Replace node body from stdin
   edgebody <doc> <src> <tgt>                 Print edge body  (also --set / --append / --file / --stdin)
+
+Paper references (optional links from an element to the prose paper):
+  paperref <doc> <ref>                       Print paper refs
+  paperref <doc> <ref> --add <loc> [--note <text>]
+                                             Add one, e.g. --add "§4.2 ¶3" --note "data model"
+  paperref <doc> <ref> --remove <n>          Remove by index (as printed)
+  paperref <doc> <ref> --clear               Remove all
+  edgepaperref <doc> <src> <tgt> [...]       Same for an edge
+  Keep paper locators here, not in bodies — bodies carry the argument.
+  A blueprint made before the paper exists has none; that's normal.
 
 Notes:
   notes <doc>                                Print the notes
@@ -704,6 +771,54 @@ const commands: Record<string, CommandHandler> = {
     });
     await writeDocument(documentPath, next);
     console.log(appendText !== undefined ? "edge body appended" : "edge body set");
+    return 0;
+  },
+
+  paperref: async ({ positional, flags }) => {
+    const [doc, ref] = positional;
+    if (!doc || !ref) throw new CliError("paperref requires <doc> <ref>");
+    const documentPath = resolveDocumentPath(doc);
+    const file = await readDocument(documentPath);
+
+    const mode = paperRefMode(flags);
+    if (mode === null) {
+      printPaperRefs(findNode(file, ref).data.paperRefs);
+      return 0;
+    }
+
+    const next =
+      mode.kind === "add"
+        ? addPaperRef(file, ref, mode.loc, mode.note)
+        : mode.kind === "remove"
+          ? removePaperRef(file, ref, mode.index)
+          : clearPaperRefs(file, ref);
+    await writeDocument(documentPath, next);
+    console.log(describePaperRefChange(mode, `"${ref}"`));
+    return 0;
+  },
+
+  edgepaperref: async ({ positional, flags }) => {
+    const [doc, source, target] = positional;
+    if (!doc || !source || !target) {
+      throw new CliError("edgepaperref requires <doc> <source-ref> <target-ref>");
+    }
+    const documentPath = resolveDocumentPath(doc);
+    const file = await readDocument(documentPath);
+
+    const mode = paperRefMode(flags);
+    if (mode === null) {
+      printPaperRefs(findEdge(file, source, target).data?.paperRefs);
+      return 0;
+    }
+
+    const next =
+      mode.kind === "add"
+        ? addEdgePaperRef(file, source, target, mode.loc, mode.note)
+        : mode.kind === "remove"
+          ? removeEdgePaperRef(file, source, target, mode.index)
+          : clearEdgePaperRefs(file, source, target);
+    await writeDocument(documentPath, next);
+    console.log(describePaperRefChange(mode, `edge "${source}" -> "${target}"`));
     return 0;
   },
 

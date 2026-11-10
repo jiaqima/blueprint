@@ -7,7 +7,7 @@ import {
   stripFileForPersist,
   stripGraphForPersist,
 } from "./graphFile";
-import type { GraphFile } from "./types";
+import type { GraphFile, PaperRef } from "./types";
 
 describe("normalizeGraphFile", () => {
   it("rejects null", () => {
@@ -229,5 +229,94 @@ describe("normalizeRegistry", () => {
     expect(r?.nodeTypes.x?.statuses[0].label).toBe("a");
     expect(r?.edgeTypes.y?.label).toBe("Untitled");
     expect(r?.edgeTypes.y?.lineStyle).toBe("solid");
+  });
+});
+
+describe("paperRefs normalization and persistence", () => {
+  const nodeWith = (paperRefs: unknown) => ({
+    id: "n1",
+    type: "mind",
+    position: { x: 0, y: 0 },
+    data: { label: "A", paperRefs },
+  });
+
+  it("normalize keeps well-formed entries and drops malformed ones", () => {
+    const file = normalizeGraphFile({
+      nodes: [
+        nodeWith([
+          { loc: "§4.2 ¶3", note: "data model" },
+          { loc: "§1" },
+          { loc: "", note: "empty loc dropped" },
+          { loc: "   ", note: "blank loc dropped" },
+          { note: "no loc dropped" },
+          "not an object",
+          null,
+          { loc: 42 },
+          { loc: "§9", note: 7 },
+        ]),
+      ],
+      edges: [],
+    });
+    expect(file!.nodes[0].data.paperRefs).toEqual([
+      { loc: "§4.2 ¶3", note: "data model" },
+      { loc: "§1" },
+      { loc: "§9" },
+    ]);
+  });
+
+  it("normalize omits the field when the list is empty or invalid", () => {
+    const dataFor = (paperRefs: unknown) =>
+      normalizeGraphFile({ nodes: [nodeWith(paperRefs)], edges: [] })!.nodes[0]
+        .data;
+    expect("paperRefs" in dataFor([])).toBe(false);
+    expect("paperRefs" in dataFor([{ loc: "" }])).toBe(false);
+    expect("paperRefs" in dataFor("nope")).toBe(false);
+  });
+
+  it("normalize keeps edge paperRefs when present", () => {
+    const file = normalizeGraphFile({
+      nodes: [],
+      edges: [
+        {
+          id: "e1",
+          source: "a",
+          target: "b",
+          data: { paperRefs: [{ loc: "§3" }] },
+        },
+      ],
+    });
+    expect(file!.edges[0].data?.paperRefs).toEqual([{ loc: "§3" }]);
+  });
+
+  it("strip rebuilds clean entries on nodes and edges", () => {
+    const graph = stripGraphForPersist({
+      nodes: [
+        {
+          id: "n1",
+          type: "mind",
+          position: { x: 0, y: 0 },
+          data: {
+            label: "A",
+            paperRefs: [
+              { loc: "§1", note: "x", junk: "dropped" } as PaperRef,
+              { loc: "§2" },
+            ],
+          },
+        },
+      ],
+      edges: [
+        {
+          id: "e1",
+          source: "n1",
+          target: "n1",
+          data: { typeId: "supports", paperRefs: [{ loc: "§5" }] },
+        },
+      ],
+    });
+    expect(graph.nodes[0].data.paperRefs).toEqual([
+      { loc: "§1", note: "x" },
+      { loc: "§2" },
+    ]);
+    expect(graph.edges[0].data?.paperRefs).toEqual([{ loc: "§5" }]);
   });
 });

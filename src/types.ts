@@ -1,5 +1,17 @@
 import type { Node, Edge } from "reactflow";
 
+// A structured link from a graph element to a location in the prose
+// paper. A blueprint may exist before any paper does (project-inception
+// planning), so an element having no paperRefs is the normal state, not
+// a gap. Kept as an object so future anchors (quote hash, revision id)
+// can be added without a schema break.
+export type PaperRef = {
+  // Where in the paper, e.g. "§4.2 ¶3" or "Sec 5, Fig 2".
+  loc: string;
+  // Optional gloss, e.g. "the data-model paragraph".
+  note?: string;
+};
+
 export type MindNodeData = {
   label: string;
   // Persisted: rich detail rendered in the Inspector.
@@ -8,6 +20,9 @@ export type MindNodeData = {
   typeId?: string;
   // Persisted: which status (within the node type's statuses) this node is in.
   statusId?: string;
+  // Persisted: where this element lives in the prose paper, if one
+  // exists. One element can anchor to several places.
+  paperRefs?: PaperRef[];
 
   // Transient (not persisted): injected by MindMap so the custom node can
   // render the inline label-edit input.
@@ -33,6 +48,9 @@ export type MindEdgeData = {
   typeId?: string;
   // Persisted: rich detail rendered in the Inspector when the edge is selected.
   body?: string;
+  // Persisted: where this relationship lives in the prose paper, if one
+  // exists (e.g. the paragraph that makes this inference).
+  paperRefs?: PaperRef[];
 };
 
 export type MindNode = Node<MindNodeData>;

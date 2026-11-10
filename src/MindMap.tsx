@@ -526,6 +526,9 @@ const MindMapInner = forwardRef<MindMapHandle, Props>(function MindMapInner(
     (g: Graph, options: { relayout?: boolean; selection?: Selection } = {}) => {
       const selectedNodes = new Set(options.selection?.nodeIds ?? []);
       const selectedEdges = new Set(options.selection?.edgeIds ?? []);
+      // Rebuild data with only the persisted fields — keep this list in
+      // sync with stripGraphForPersist (graphFile.ts) when the schema
+      // gains a field, or loads will silently drop it.
       const typed = g.nodes.map((n) => ({
         ...n,
         type: "mind" as const,
@@ -534,6 +537,7 @@ const MindMapInner = forwardRef<MindMapHandle, Props>(function MindMapInner(
           body: n.data.body,
           typeId: n.data.typeId,
           statusId: n.data.statusId,
+          paperRefs: n.data.paperRefs,
         },
         selected: selectedNodes.has(n.id),
       }));
@@ -541,8 +545,14 @@ const MindMapInner = forwardRef<MindMapHandle, Props>(function MindMapInner(
         g.edges.map((e) => ({
           ...e,
           selected: selectedEdges.has(e.id),
-          // Preserve persisted edge data (typeId, body) on reload.
-          data: e.data ? { typeId: e.data.typeId, body: e.data.body } : undefined,
+          // Preserve persisted edge data (typeId, body, paperRefs) on reload.
+          data: e.data
+            ? {
+                typeId: e.data.typeId,
+                body: e.data.body,
+                paperRefs: e.data.paperRefs,
+              }
+            : undefined,
         })),
       );
       setNodes(

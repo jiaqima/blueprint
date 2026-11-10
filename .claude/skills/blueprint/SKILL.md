@@ -273,6 +273,27 @@ echo "..." | npm run blueprint -- body paper "Section 1" --stdin
 npm run blueprint -- body paper "Section 1"                     # print the body
 ```
 
+### Paper references (linking elements to the prose paper)
+
+`paperRefs` is an optional list of structured links from a node or edge
+to locations in the prose paper: `{ "loc": "§4.2 ¶3", "note": "..." }`.
+Keep paper locators here, **not in bodies** — bodies carry the argument
+itself, and locators kept as data can be re-anchored when the paper is
+revised without touching the argument text.
+
+A blueprint often exists before any paper does (project-inception
+planning). Absence of paper refs is the normal state, not a gap — don't
+nag about missing ones. When a draft lands, an "anchor pass" (walk the
+blueprint, stamp refs element by element) is the natural workflow.
+
+```bash
+npm run blueprint -- paperref paper "Claim X"                    # print (numbered)
+npm run blueprint -- paperref paper "Claim X" --add "§4.2 ¶3" --note "data model"
+npm run blueprint -- paperref paper "Claim X" --remove 2         # by printed index
+npm run blueprint -- paperref paper "Claim X" --clear
+npm run blueprint -- edgepaperref paper "Evidence 1" "Claim X" --add "§5 ¶1"
+```
+
 ### Per-document notes (separate from node bodies)
 
 A free-form scratchpad attached to the whole document — useful for
@@ -345,7 +366,10 @@ that type.
         "label": "Section 1",          // short title (always visible on the canvas)
         "body": "## Why\n\n...",      // Markdown + KaTeX (rendered in the Inspector)
         "typeId": "claim",             // → registry.nodeTypes
-        "statusId": "stated"       // → that type's status set
+        "statusId": "stated",      // → that type's status set
+        "paperRefs": [                 // optional; absent when there's no paper (yet)
+          { "loc": "§4.2 ¶3", "note": "data model" }
+        ]
       }
     }
   ],
@@ -354,7 +378,7 @@ that type.
       "id": "e_a_b",
       "source": "n_xyz_1",
       "target": "n_xyz_2",
-      "data": { "typeId": "supports", "body": "..." }
+      "data": { "typeId": "supports", "body": "...", "paperRefs": [{ "loc": "§5 ¶1" }] }
     }
   ],
   "notes": "...",
@@ -367,8 +391,8 @@ that type.
 }
 ```
 
-Bodies, types, statuses, edge types, and edge bodies all round-trip
-through the JSON. The `ui` block is per-user view state (selection /
+Bodies, types, statuses, edge types, edge bodies, and paper refs all
+round-trip through the JSON. The `ui` block is per-user view state (selection /
 viewport / collapsed) and is also persisted with the document.
 
 ## Caveats

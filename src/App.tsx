@@ -36,6 +36,7 @@ import type {
   GraphFile,
   MindEdgeData,
   MindNodeData,
+  PaperRef,
   Registry,
   Selection,
   Viewport,
@@ -526,6 +527,23 @@ export default function App() {
     [setEdgeData],
   );
 
+  // Empty list ⇒ undefined so the field disappears from persisted JSON.
+  const onSetNodePaperRefs = useCallback(
+    (id: string, paperRefs: PaperRef[]) =>
+      setNodeData(id, {
+        paperRefs: paperRefs.length > 0 ? paperRefs : undefined,
+      }),
+    [setNodeData],
+  );
+
+  const onSetEdgePaperRefs = useCallback(
+    (id: string, paperRefs: PaperRef[]) =>
+      setEdgeData(id, {
+        paperRefs: paperRefs.length > 0 ? paperRefs : undefined,
+      }),
+    [setEdgeData],
+  );
+
   const nodeLabel = useCallback(
     (id: string): string =>
       graphFile.nodes.find((n) => n.id === id)?.data.label ?? id,
@@ -625,8 +643,10 @@ export default function App() {
                 onSetNodeType={onSetNodeType}
                 onSetNodeStatus={onSetNodeStatus}
                 onSetNodeBody={onSetNodeBody}
+                onSetNodePaperRefs={onSetNodePaperRefs}
                 onSetEdgeType={onSetEdgeType}
                 onSetEdgeBody={onSetEdgeBody}
+                onSetEdgePaperRefs={onSetEdgePaperRefs}
               />
             ) : (
               <NotesPanel notes={graphFile.notes} onChange={onNotesChange} />

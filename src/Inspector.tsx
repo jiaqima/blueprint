@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MarkdownView } from "./MarkdownView";
 import { getNodeType, getStatus } from "./registry";
-import type { MindEdge, MindNode, Registry } from "./types";
+import type { MindEdge, MindNode, PaperRef, Registry } from "./types";
 
 type Props = {
   selectedNode: MindNode | null;
@@ -13,8 +13,10 @@ type Props = {
   onSetNodeType: (id: string, typeId: string | undefined) => void;
   onSetNodeStatus: (id: string, statusId: string | undefined) => void;
   onSetNodeBody: (id: string, body: string) => void;
+  onSetNodePaperRefs: (id: string, paperRefs: PaperRef[]) => void;
   onSetEdgeType: (id: string, typeId: string | undefined) => void;
   onSetEdgeBody: (id: string, body: string) => void;
+  onSetEdgePaperRefs: (id: string, paperRefs: PaperRef[]) => void;
 };
 
 const NO_TYPE = "__none__";
@@ -57,6 +59,7 @@ function NodeInspector({
   onSetNodeType,
   onSetNodeStatus,
   onSetNodeBody,
+  onSetNodePaperRefs,
 }: Props & { node: MindNode }) {
   const type = getNodeType(registry, node.data.typeId);
   const status = type ? getStatus(type, node.data.statusId) : undefined;
@@ -126,6 +129,12 @@ function NodeInspector({
         </div>
       </div>
 
+      <PaperRefsEditor
+        key={`refs-${node.id}`}
+        refs={node.data.paperRefs ?? []}
+        onChange={(refs) => onSetNodePaperRefs(node.id, refs)}
+      />
+
       <BodyEditor
         key={node.id}
         initial={node.data.body ?? ""}
@@ -141,6 +150,7 @@ function EdgeInspector({
   nodeLabel,
   onSetEdgeType,
   onSetEdgeBody,
+  onSetEdgePaperRefs,
 }: Props & { edge: MindEdge }) {
   const typeId = edge.data?.typeId;
 
@@ -172,11 +182,90 @@ function EdgeInspector({
         </select>
       </div>
 
+      <PaperRefsEditor
+        key={`refs-${edge.id}`}
+        refs={edge.data?.paperRefs ?? []}
+        onChange={(refs) => onSetEdgePaperRefs(edge.id, refs)}
+      />
+
       <BodyEditor
         key={edge.id}
         initial={edge.data?.body ?? ""}
         onChange={(body) => onSetEdgeBody(edge.id, body)}
       />
+    </div>
+  );
+}
+
+// Structured links from the selected element to locations in the prose
+// paper. Absence is the normal state (a blueprint may predate any paper),
+// so the section renders as just a label and an add row when empty.
+// Editing an entry = remove + re-add, mirroring the CLI.
+function PaperRefsEditor({
+  refs,
+  onChange,
+}: {
+  refs: PaperRef[];
+  onChange: (refs: PaperRef[]) => void;
+}) {
+  const [loc, setLoc] = useState("");
+  const [note, setNote] = useState("");
+
+  const add = () => {
+    const cleanLoc = loc.trim();
+    if (!cleanLoc) return;
+    const cleanNote = note.trim();
+    onChange([
+      ...refs,
+      cleanNote ? { loc: cleanLoc, note: cleanNote } : { loc: cleanLoc },
+    ]);
+    setLoc("");
+    setNote("");
+  };
+
+  return (
+    <div className="inspector__row">
+      <label className="inspector__label">Paper refs</label>
+      {refs.map((r, i) => (
+        <div key={i} className="inspector__ref">
+          <span className="inspector__ref-loc">{r.loc}</span>
+          {r.note ? <span className="inspector__ref-note">{r.note}</span> : null}
+          <button
+            className="inspector__ref-remove"
+            title="Remove this paper ref"
+            onClick={() => onChange(refs.filter((_, j) => j !== i))}
+          >
+            ×
+          </button>
+        </div>
+      ))}
+      <div className="inspector__ref-add">
+        <input
+          className="inspector__input inspector__ref-add-loc"
+          placeholder="§4.2 ¶3"
+          value={loc}
+          onChange={(e) => setLoc(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") add();
+          }}
+        />
+        <input
+          className="inspector__input inspector__ref-add-note"
+          placeholder="note (optional)"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") add();
+          }}
+        />
+        <button
+          className="inspector__ref-add-button"
+          onClick={add}
+          disabled={!loc.trim()}
+        >
+          Add
+        </button>
+      </div>
     </div>
   );
 }

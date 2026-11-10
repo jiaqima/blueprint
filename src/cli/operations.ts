@@ -11,7 +11,10 @@ import { isWorkspaceToolFile } from "../server/workspace";
 import type {
   GraphFile,
   MindEdge,
+  MindEdgeData,
   MindNode,
+  MindNodeData,
+  PaperRef,
   Registry,
 } from "../types";
 
@@ -459,6 +462,138 @@ export function setEdgeBody(
     ...file,
     edges: file.edges.map((e) =>
       e.id === edge.id ? { ...e, data: { ...(e.data ?? {}), body: next } } : e,
+    ),
+  };
+}
+
+// Paper references: structured links from a graph element to locations
+// in the prose paper ({ loc, note? }). Optional everywhere — a blueprint
+// created at project inception has no paper yet, and that's the normal
+// state, not a gap.
+
+function makePaperRef(loc: string, note?: string): PaperRef {
+  const trimmed = loc.trim();
+  if (trimmed === "") throw new CliError("paper ref location is empty");
+  const cleanNote = note?.trim();
+  return cleanNote ? { loc: trimmed, note: cleanNote } : { loc: trimmed };
+}
+
+// Set (or, on an empty list, remove) paperRefs on a data object.
+function withNodePaperRefs(data: MindNodeData, refs: PaperRef[]): MindNodeData {
+  const next = { ...data };
+  if (refs.length > 0) next.paperRefs = refs;
+  else delete next.paperRefs;
+  return next;
+}
+
+function withEdgePaperRefs(
+  data: MindEdgeData | undefined,
+  refs: PaperRef[],
+): MindEdgeData {
+  const next = { ...(data ?? {}) };
+  if (refs.length > 0) next.paperRefs = refs;
+  else delete next.paperRefs;
+  return next;
+}
+
+function checkPaperRefIndex(count: number, index: number, what: string): void {
+  if (!Number.isInteger(index) || index < 1 || index > count) {
+    throw new CliError(
+      `paper ref index ${index} out of range: ${what} has ${count} paper ref${
+        count === 1 ? "" : "s"
+      }`,
+    );
+  }
+}
+
+export function addPaperRef(
+  file: GraphFile,
+  ref: NodeRef,
+  loc: string,
+  note?: string,
+): GraphFile {
+  const node = findNode(file, ref);
+  const next = [...(node.data.paperRefs ?? []), makePaperRef(loc, note)];
+  return {
+    ...file,
+    nodes: file.nodes.map((n) =>
+      n.id === node.id ? { ...n, data: withNodePaperRefs(n.data, next) } : n,
+    ),
+  };
+}
+
+export function removePaperRef(
+  file: GraphFile,
+  ref: NodeRef,
+  index: number,
+): GraphFile {
+  const node = findNode(file, ref);
+  const refs = node.data.paperRefs ?? [];
+  checkPaperRefIndex(refs.length, index, `"${node.data.label}"`);
+  const next = refs.filter((_, i) => i !== index - 1);
+  return {
+    ...file,
+    nodes: file.nodes.map((n) =>
+      n.id === node.id ? { ...n, data: withNodePaperRefs(n.data, next) } : n,
+    ),
+  };
+}
+
+export function clearPaperRefs(file: GraphFile, ref: NodeRef): GraphFile {
+  const node = findNode(file, ref);
+  return {
+    ...file,
+    nodes: file.nodes.map((n) =>
+      n.id === node.id ? { ...n, data: withNodePaperRefs(n.data, []) } : n,
+    ),
+  };
+}
+
+export function addEdgePaperRef(
+  file: GraphFile,
+  sourceRef: NodeRef,
+  targetRef: NodeRef,
+  loc: string,
+  note?: string,
+): GraphFile {
+  const edge = findEdge(file, sourceRef, targetRef);
+  const next = [...(edge.data?.paperRefs ?? []), makePaperRef(loc, note)];
+  return {
+    ...file,
+    edges: file.edges.map((e) =>
+      e.id === edge.id ? { ...e, data: withEdgePaperRefs(e.data, next) } : e,
+    ),
+  };
+}
+
+export function removeEdgePaperRef(
+  file: GraphFile,
+  sourceRef: NodeRef,
+  targetRef: NodeRef,
+  index: number,
+): GraphFile {
+  const edge = findEdge(file, sourceRef, targetRef);
+  const refs = edge.data?.paperRefs ?? [];
+  checkPaperRefIndex(refs.length, index, "this edge");
+  const next = refs.filter((_, i) => i !== index - 1);
+  return {
+    ...file,
+    edges: file.edges.map((e) =>
+      e.id === edge.id ? { ...e, data: withEdgePaperRefs(e.data, next) } : e,
+    ),
+  };
+}
+
+export function clearEdgePaperRefs(
+  file: GraphFile,
+  sourceRef: NodeRef,
+  targetRef: NodeRef,
+): GraphFile {
+  const edge = findEdge(file, sourceRef, targetRef);
+  return {
+    ...file,
+    edges: file.edges.map((e) =>
+      e.id === edge.id ? { ...e, data: withEdgePaperRefs(e.data, []) } : e,
     ),
   };
 }

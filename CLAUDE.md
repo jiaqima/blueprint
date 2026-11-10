@@ -96,16 +96,21 @@ type GraphFile = Graph & {
   registry?: Registry;     // optional per-doc taxonomy override
 };
 
+type PaperRef = { loc: string; note?: string };  // e.g. { loc: "§4.2 ¶3" }
+
 type MindNodeData = {
   label: string;
   body?: string;       // Markdown + KaTeX detail rendered in the Inspector
   typeId?: string;     // references registry.nodeTypes
   statusId?: string;   // references the type's statuses
+  paperRefs?: PaperRef[];  // optional links into the prose paper; absent
+                           // is normal (a blueprint may predate the paper)
 };
 
 type MindEdgeData = {
   typeId?: string;     // references registry.edgeTypes
   body?: string;       // Markdown + KaTeX detail (e.g. why X supports Y)
+  paperRefs?: PaperRef[];  // same, for the relationship
 };
 
 type Registry = {
@@ -287,7 +292,9 @@ dev server *is* running, the file watcher live-syncs the browser within
 — structure (`addChild`, `addSibling`, `deleteNode`, `move`, `link`,
 `unlink`, `synthesize`), content (`setNodeLabel`/`rename`, `setNodeBody`,
 `setEdgeBody`, `setNotes`), vocabulary (`setNodeType`, `setNodeStatus`,
-`setEdgeType`, `effectiveRegistry`), plus `importMarkdown`, `find`, and
+`setEdgeType`, `effectiveRegistry`), paper refs (`addPaperRef`,
+`removePaperRef`, `clearPaperRefs` + edge variants), plus
+`importMarkdown`, `find`, and
 `outline`; the pure lint pass lives in `src/lint.ts`. They reuse the existing
 `normalizeGraphFile` / `seedGraphFile` / `stripFileForPersist` from
 `graphFile.ts` and `parseMarkdownOutline` from `markdown.ts`. Node refs in
@@ -343,7 +350,10 @@ round; pick one up when the user asks.
    agent.
 7. **Citation-store / BibTeX integration on `evidence` nodes** —
    `evidence` nodes carry a `citationKey`; workspace `references.bib`
-   resolves to rendered citations in the body.
+   resolves to rendered citations in the body. Distinct from
+   `data.paperRefs` (shipped): that links an element to a location in
+   *this project's own* prose paper; the citation store identifies
+   *external* sources.
 
 ## Conventions
 

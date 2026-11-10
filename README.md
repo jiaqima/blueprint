@@ -137,6 +137,20 @@ npm run blueprint -- edgebody paper "Section 1" "Section 2" --set "X is a specia
 npm run blueprint -- show paper            # outline now shows [type · status]
 ```
 
+Nodes and edges can also carry **paper references** — structured links
+(`{ "loc": "§4.2 ¶3", "note": "..." }`) to where the element lives in the
+prose paper. Keep locators there rather than in bodies, so a paper
+revision means updating data instead of rewriting argument text. A
+blueprint created at project inception simply has none until a draft
+exists.
+
+```bash
+npm run blueprint -- paperref paper "Section 1" --add "§2 ¶1" --note "where stated"
+npm run blueprint -- paperref paper "Section 1"              # print (numbered)
+npm run blueprint -- paperref paper "Section 1" --remove 1   # by printed index
+npm run blueprint -- edgepaperref paper "Section 1" "Section 2" --add "§5 ¶1"
+```
+
 When several pieces of evidence (or claims) only support a downstream claim *jointly* and the joint argument doesn't fit on a single edge, collapse them under a `synthesis` node:
 
 ```bash

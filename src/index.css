@@ -449,6 +449,76 @@ html, body, #root {
   overflow-y: auto;
 }
 
+.inspector__ref {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  color: #1f2937;
+  padding: 1px 0;
+}
+.inspector__ref-loc {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.inspector__ref-note {
+  color: #6b7280;
+  font-size: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.inspector__ref-remove {
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1;
+  padding: 1px 6px;
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+.inspector__ref-remove:hover {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.inspector__ref-add {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.inspector__ref-add-loc {
+  flex: 0 0 96px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  min-width: 0;
+}
+.inspector__ref-add-note {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.inspector__ref-add-button {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.inspector__ref-add-button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+.inspector__ref-add-button:disabled {
+  color: #9ca3af;
+  background: #f9fafb;
+  cursor: not-allowed;
+}
+
 /* Markdown rendering inside the preview */
 .markdown {
   font-size: 13px;

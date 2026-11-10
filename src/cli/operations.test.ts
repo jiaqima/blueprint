@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { defaultRegistry, defaultUi, seedGraphFile } from "../graphFile";
 import {
   addChild,
+  addEdgePaperRef,
+  addPaperRef,
   addSibling,
+  clearEdgePaperRefs,
+  clearPaperRefs,
   CliError,
   deleteNode,
   effectiveRegistry,
@@ -13,6 +17,8 @@ import {
   link,
   move,
   outline,
+  removeEdgePaperRef,
+  removePaperRef,
   rename,
   resolveDocumentPath,
   setEdgeBody,
@@ -571,5 +577,87 @@ describe("effectiveRegistry", () => {
     };
     expect(effectiveRegistry(seedGraphFile(), ws)).toBe(ws);
     expect(effectiveRegistry(seedGraphFile(), null)).toEqual(reg);
+  });
+});
+
+// ---------------------------------------------------------------------------
+
+describe("paper refs", () => {
+  const base = () =>
+    mkFile(
+      [
+        { id: "n1", label: "Claim A", typeId: "claim" },
+        { id: "n2", label: "Evidence B", typeId: "evidence" },
+      ],
+      [{ source: "n2", target: "n1", typeId: "supports" }],
+    );
+
+  it("addPaperRef appends entries in order, trimming loc and note", () => {
+    let f = addPaperRef(base(), "Claim A", " §4.2 ¶3 ", "  data model  ");
+    f = addPaperRef(f, "n1", "§1 ¶2");
+    expect(findNode(f, "n1").data.paperRefs).toEqual([
+      { loc: "§4.2 ¶3", note: "data model" },
+      { loc: "§1 ¶2" },
+    ]);
+  });
+
+  it("addPaperRef rejects an empty loc and drops an empty note", () => {
+    expect(() => addPaperRef(base(), "n1", "   ")).toThrow(CliError);
+    const f = addPaperRef(base(), "n1", "§2", "   ");
+    expect(findNode(f, "n1").data.paperRefs).toEqual([{ loc: "§2" }]);
+  });
+
+  it("removePaperRef removes by 1-based index; the field disappears when empty", () => {
+    let f = addPaperRef(base(), "n1", "§1");
+    f = addPaperRef(f, "n1", "§2");
+    f = removePaperRef(f, "n1", 1);
+    expect(findNode(f, "n1").data.paperRefs).toEqual([{ loc: "§2" }]);
+    f = removePaperRef(f, "n1", 1);
+    expect("paperRefs" in findNode(f, "n1").data).toBe(false);
+  });
+
+  it("removePaperRef rejects out-of-range and non-integer indices", () => {
+    const f = addPaperRef(base(), "n1", "§1");
+    expect(() => removePaperRef(f, "n1", 0)).toThrow(CliError);
+    expect(() => removePaperRef(f, "n1", 2)).toThrow(CliError);
+    expect(() => removePaperRef(f, "n1", 1.5)).toThrow(CliError);
+    expect(() => removePaperRef(base(), "n1", 1)).toThrow(CliError);
+  });
+
+  it("clearPaperRefs removes the field entirely and is a no-op when absent", () => {
+    let f = addPaperRef(base(), "n1", "§1");
+    f = addPaperRef(f, "n1", "§2");
+    f = clearPaperRefs(f, "n1");
+    expect("paperRefs" in findNode(f, "n1").data).toBe(false);
+    expect(() => clearPaperRefs(base(), "n1")).not.toThrow();
+  });
+
+  it("edge variants add / remove / clear while preserving other edge data", () => {
+    let f = addEdgePaperRef(base(), "n2", "n1", "§5 ¶1", "the inference");
+    let edge = findEdge(f, "n2", "n1");
+    expect(edge.data?.paperRefs).toEqual([
+      { loc: "§5 ¶1", note: "the inference" },
+    ]);
+    expect(edge.data?.typeId).toBe("supports");
+
+    f = addEdgePaperRef(f, "n2", "n1", "§6");
+    f = removeEdgePaperRef(f, "n2", "n1", 1);
+    edge = findEdge(f, "n2", "n1");
+    expect(edge.data?.paperRefs).toEqual([{ loc: "§6" }]);
+
+    f = clearEdgePaperRefs(f, "n2", "n1");
+    edge = findEdge(f, "n2", "n1");
+    expect(edge.data !== undefined && "paperRefs" in edge.data).toBe(false);
+    expect(edge.data?.typeId).toBe("supports");
+  });
+
+  it("removeEdgePaperRef rejects when the edge has no refs", () => {
+    expect(() => removeEdgePaperRef(base(), "n2", "n1", 1)).toThrow(CliError);
+  });
+
+  it("resolves node and edge refs like the other ops", () => {
+    expect(() => addPaperRef(base(), "nope", "§1")).toThrow(CliError);
+    // Direction matters: the edge runs n2 → n1.
+    expect(() => addEdgePaperRef(base(), "n1", "n2", "§1")).toThrow(CliError);
   });
 });

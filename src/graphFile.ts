@@ -6,6 +6,7 @@ import type {
   MindEdgeData,
   MindNodeData,
   NodeTypeDef,
+  PaperRef,
   Registry,
   Selection,
   StatusDef,
@@ -164,6 +165,23 @@ function stringOrUndef(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+// Keep only well-formed entries (non-empty string `loc`, string `note`
+// if present); an empty result collapses to undefined so documents
+// without paper refs stay free of the field.
+function normalizePaperRefs(value: unknown): PaperRef[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const out: PaperRef[] = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") continue;
+    const v = entry as Partial<PaperRef>;
+    if (typeof v.loc !== "string" || v.loc.trim() === "") continue;
+    const ref: PaperRef = { loc: v.loc };
+    if (typeof v.note === "string") ref.note = v.note;
+    out.push(ref);
+  }
+  return out.length > 0 ? out : undefined;
+}
+
 function normalizeNodeData(value: unknown): MindNodeData {
   if (!value || typeof value !== "object") return { label: "" };
   const v = value as Partial<MindNodeData>;
@@ -171,6 +189,8 @@ function normalizeNodeData(value: unknown): MindNodeData {
   if (typeof v.body === "string") out.body = v.body;
   if (typeof v.typeId === "string") out.typeId = v.typeId;
   if (typeof v.statusId === "string") out.statusId = v.statusId;
+  const paperRefs = normalizePaperRefs(v.paperRefs);
+  if (paperRefs) out.paperRefs = paperRefs;
   return out;
 }
 
@@ -180,6 +200,8 @@ function normalizeEdgeData(value: unknown): MindEdgeData | undefined {
   const out: MindEdgeData = {};
   if (typeof v.typeId === "string") out.typeId = v.typeId;
   if (typeof v.body === "string") out.body = v.body;
+  const paperRefs = normalizePaperRefs(v.paperRefs);
+  if (paperRefs) out.paperRefs = paperRefs;
   if (Object.keys(out).length === 0) return undefined;
   return out;
 }
@@ -275,6 +297,15 @@ export function normalizeGraphFile(value: unknown): GraphFile | null {
   };
 }
 
+// Rebuild persisted entries as clean { loc, note? } objects so transient
+// junk can't ride along.
+function stripPaperRefs(refs: PaperRef[] | undefined): PaperRef[] | undefined {
+  if (!refs || refs.length === 0) return undefined;
+  return refs.map((r) =>
+    r.note !== undefined ? { loc: r.loc, note: r.note } : { loc: r.loc },
+  );
+}
+
 export function stripGraphForPersist(graph: Graph): Graph {
   return {
     nodes: graph.nodes.map((n) => {
@@ -282,6 +313,8 @@ export function stripGraphForPersist(graph: Graph): Graph {
       if (n.data?.body !== undefined) data.body = n.data.body;
       if (n.data?.typeId !== undefined) data.typeId = n.data.typeId;
       if (n.data?.statusId !== undefined) data.statusId = n.data.statusId;
+      const paperRefs = stripPaperRefs(n.data?.paperRefs);
+      if (paperRefs) data.paperRefs = paperRefs;
       return {
         ...n,
         data,
@@ -300,6 +333,8 @@ export function stripGraphForPersist(graph: Graph): Graph {
       const data: MindEdgeData = {};
       if (e.data?.typeId !== undefined) data.typeId = e.data.typeId;
       if (e.data?.body !== undefined) data.body = e.data.body;
+      const paperRefs = stripPaperRefs(e.data?.paperRefs);
+      if (paperRefs) data.paperRefs = paperRefs;
       const cleaned: MindEdge = { ...e, selected: undefined };
       if (Object.keys(data).length > 0) cleaned.data = data;
       else delete (cleaned as { data?: unknown }).data;
